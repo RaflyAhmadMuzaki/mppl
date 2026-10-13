@@ -1,0 +1,34 @@
+{
+  "name": "SIMPEL - Sistem Informasi Pelaporan Lingkungan",
+  "short_name": "SIMPEL",
+  "description": "Portal Web Pelaporan Fasilitas dan Lingkungan Kota - MPPL",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3f6f4",
+  "theme_color": "#14532d",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Buat Laporan Baru",
+      "short_name": "Buat Laporan",
+      "description": "Laporkan masalah lingkungan di sekitar anda",
+      "url": "/#form-laporan",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "192x192" }]
+    },
+    {
+      "name": "Peta Persebaran",
+      "short_name": "Peta",
+      "description": "Lihat peta sebaran aduan kota",
+      "url": "/#peta-laporan",
+      "icons": [{ "src": "/icons/icon.svg", "sizes": "192x192" }]
+    }
+  ]
+}

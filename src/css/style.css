@@ -1,0 +1,774 @@
+:root {
+  --bg-primary: #f3f6f4;
+  --bg-card: #ffffff;
+  --accent-green: #15803d;
+  --accent-teal: #0f766e;
+  --accent-blue: #176b87;
+  --ink: #172b24;
+  --muted: #617168;
+  --line: #dfe8e2;
+}
+
+body {
+  font-family: 'Source Sans 3', sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--ink);
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #edf2ef;
+}
+::-webkit-scrollbar-thumb {
+  background: #aebdb4;
+  border: 2px solid #edf2ef;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #82958a;
+}
+
+/* Map Containers */
+#map-picker, #map-distribution {
+  border-radius: 0.85rem;
+  z-index: 10;
+  box-shadow: inset 0 1px 4px rgba(19, 47, 34, 0.12);
+}
+
+/* Government portal theme */
+#main-app-wrapper {
+  background: #f3f6f4;
+  color: var(--ink);
+}
+
+#main-app-wrapper > header {
+  background: rgba(255, 255, 255, 0.97);
+  border-color: var(--line);
+  box-shadow: 0 2px 12px rgba(23, 43, 36, 0.06);
+}
+
+#main-app-wrapper > header > div {
+  min-height: 76px;
+}
+
+#main-app-wrapper > header > div > a[href="#"] {
+  order: 1;
+}
+
+#main-app-wrapper > header nav {
+  order: 2;
+}
+
+#main-app-wrapper > header .gov-header-controls {
+  order: 3;
+}
+
+#main-app-wrapper > header nav {
+  color: #46564d;
+}
+
+#main-app-wrapper > header nav a {
+  padding: 0.6rem 0;
+}
+
+#main-app-wrapper > header nav a:hover {
+  color: #166534;
+}
+
+#main-app-wrapper > header nav a[aria-current="page"] {
+  color: #166534;
+  font-weight: 800;
+}
+
+#main-app-wrapper > header a[href="#"] > div:first-child {
+  border-radius: 0.75rem;
+  border: 0;
+  background: #155d3b;
+  color: white;
+  box-shadow: none;
+}
+
+#main-app-wrapper > header a[href="#"] p {
+  color: #66756d;
+}
+
+#main-app-wrapper > header #user-profile-badge,
+#main-app-wrapper > header #btn-open-inbox {
+  background: #f7faf8;
+  border-color: var(--line);
+  color: #33473c;
+  border-radius: 0.75rem;
+}
+
+#main-app-wrapper > header #user-name-text {
+  color: #26382e;
+}
+
+#main-app-wrapper > header #user-role-text {
+  color: #287443;
+}
+
+#main-app-wrapper > main {
+  max-width: none;
+  padding: 0 0 4rem;
+  gap: 3.25rem;
+}
+
+#main-app-wrapper > main > section:not(:first-child) {
+  width: min(80rem, calc(100% - 3rem));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#main-app-wrapper > main > section:first-child {
+  min-height: 390px;
+  display: flex;
+  align-items: center;
+  padding: 4.5rem max(1.5rem, calc((100% - 80rem) / 2));
+  background-color: #123b2c;
+  background-image:
+    linear-gradient(90deg, rgba(9, 43, 31, 0.95) 0%, rgba(13, 51, 36, 0.83) 48%, rgba(8, 39, 31, 0.53) 100%),
+    url("https://images.unsplash.com/photo-1519501025264-65ba15a82390?auto=format&fit=crop&w=2200&q=85");
+  background-size: cover;
+  background-position: center 54%;
+  border-bottom: 5px solid #8cbd55;
+}
+
+.government-hero > .absolute {
+  display: none;
+}
+
+.government-hero > .relative {
+  width: 100%;
+  margin: 0 auto;
+}
+
+.gov-hero-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.15rem;
+  color: #c7e8c0;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.government-hero h1 {
+  max-width: 780px;
+  color: #fff;
+  font-size: clamp(2.3rem, 4.8vw, 4rem);
+  line-height: 1.12;
+  letter-spacing: -0.045em;
+  text-wrap: balance;
+}
+
+#main-app-wrapper .government-hero .text-white {
+  color: #fff !important;
+}
+
+.government-hero p {
+  max-width: 680px;
+  color: rgba(244, 249, 245, 0.88);
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+#main-app-wrapper .government-hero .text-slate-300 {
+  color: rgba(244, 249, 245, 0.88) !important;
+}
+
+.government-hero a:first-child {
+  background: #13834c;
+  color: white;
+  border-radius: 0.55rem;
+  box-shadow: none;
+}
+
+.government-hero a:first-child:hover {
+  background: #16935a;
+}
+
+.government-hero a:nth-child(2) {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.48);
+  border-radius: 0.55rem;
+}
+
+.gov-hero-note {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1.35rem;
+  color: rgba(237, 246, 240, 0.82);
+  font-size: 0.78rem;
+}
+
+.gov-hero-note span {
+  display: inline-grid;
+  width: 1.25rem;
+  height: 1.25rem;
+  place-items: center;
+  border: 1px solid rgba(201, 232, 192, 0.6);
+  border-radius: 50%;
+  color: #c7e8c0;
+  font-size: 0.7rem;
+}
+
+#main-app-wrapper > main > section:nth-child(2) {
+  margin-top: -5.2rem;
+  position: relative;
+  z-index: 2;
+}
+
+#main-app-wrapper > main > section:nth-child(2) > div,
+#main-app-wrapper .bg-slate-900,
+#main-app-wrapper .bg-slate-900\/80,
+#main-app-wrapper .bg-slate-900\/90 {
+  background-color: #fff !important;
+}
+
+#main-app-wrapper .bg-slate-950,
+#main-app-wrapper .bg-slate-950\/60,
+#main-app-wrapper .bg-slate-950\/80 {
+  background-color: #f5f8f6 !important;
+}
+
+#main-app-wrapper .bg-slate-800,
+#main-app-wrapper .bg-slate-800\/80,
+#main-app-wrapper .bg-slate-800\/40 {
+  background-color: #f1f5f2 !important;
+}
+
+#main-app-wrapper .border-slate-800,
+#main-app-wrapper .border-slate-700,
+#main-app-wrapper .border-slate-700\/80 {
+  border-color: var(--line) !important;
+}
+
+#main-app-wrapper .text-white,
+#main-app-wrapper .text-slate-100 {
+  color: #20352a !important;
+}
+
+#main-app-wrapper .text-slate-200 {
+  color: #33483c !important;
+}
+
+#main-app-wrapper .text-slate-300 {
+  color: #485b50 !important;
+}
+
+#main-app-wrapper .text-slate-400 {
+  color: #687a70 !important;
+}
+
+#main-app-wrapper .text-emerald-400 {
+  color: #247345 !important;
+}
+
+#main-app-wrapper .text-slate-950 {
+  color: #fff !important;
+}
+
+#main-app-wrapper .bg-emerald-500 {
+  background-color: #16834d !important;
+}
+
+#main-app-wrapper .hover\:bg-emerald-400:hover {
+  background-color: #117244 !important;
+}
+
+#main-app-wrapper > main > section:not(:first-child) > .flex:first-child {
+  border-color: #d8e2dc;
+}
+
+#main-app-wrapper > main > section:not(:first-child) h2 {
+  color: #174934;
+  font-family: 'Lora', Georgia, serif;
+  font-size: clamp(1.45rem, 2.3vw, 2rem);
+  letter-spacing: -0.02em;
+}
+
+#main-app-wrapper > main > section:not(:first-child) > .bg-slate-900\/90 {
+  border-color: #d9e5dd !important;
+  box-shadow: 0 12px 32px rgba(29, 58, 42, 0.07);
+}
+
+#main-app-wrapper input:not([type="file"]),
+#main-app-wrapper select,
+#main-app-wrapper textarea {
+  background-color: #fff !important;
+  border-color: #cbd8d0 !important;
+  color: #20352a !important;
+}
+
+#main-app-wrapper input::placeholder,
+#main-app-wrapper textarea::placeholder {
+  color: #85948b;
+}
+
+#main-app-wrapper input:focus,
+#main-app-wrapper select:focus,
+#main-app-wrapper textarea:focus {
+  border-color: #27804d !important;
+  box-shadow: 0 0 0 3px rgba(39, 128, 77, 0.11);
+}
+
+#main-app-wrapper input[type="file"] {
+  background-color: #f8faf9;
+  color: #52645a;
+}
+
+#main-app-wrapper .bg-emerald-950\/40 {
+  background-color: #eff8f0 !important;
+}
+
+#main-app-wrapper .text-emerald-300 {
+  color: #39744b !important;
+}
+
+#main-app-wrapper .border-emerald-900\/50 {
+  border-color: #d6e9d9 !important;
+}
+
+#main-app-wrapper .bg-slate-700 {
+  background-color: #d9e2dc !important;
+}
+
+#main-app-wrapper .text-slate-400.bg-slate-700 {
+  color: #69786f !important;
+}
+
+#main-app-wrapper #section-admin-panel {
+  background-color: #f8fbf9 !important;
+}
+
+#main-app-wrapper #section-admin-panel table thead {
+  background: #edf4ef;
+}
+
+#main-app-wrapper #section-admin-panel tbody tr:hover {
+  background: #f5f9f6;
+}
+
+#main-app-wrapper footer {
+  background: #173e2e;
+  border-color: #27513e;
+  color: #d3e2d8;
+}
+
+#auth-gate-screen {
+  background: rgba(9, 30, 22, 0.78) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+#auth-gate-screen .btn-close-gate {
+  position: absolute;
+  top: 1.1rem;
+  right: 1.1rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 9999px;
+  background: #edf2ef;
+  color: #3e5046;
+  border: 1px solid #dfe8e2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 20;
+}
+
+#auth-gate-screen .btn-close-gate:hover {
+  background: #dfe8e2;
+  color: #112019;
+}
+
+#main-app-wrapper > header #btn-open-login {
+  background: #15803d;
+  color: #ffffff;
+  border-radius: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(21, 128, 61, 0.25);
+  transition: all 0.2s ease;
+}
+
+#main-app-wrapper > header #btn-open-login:hover {
+  background: #166534;
+}
+
+#guest-form-notice {
+  background: #f7faf8 !important;
+  border: 1px solid #c7e0cf !important;
+  color: #172b24 !important;
+}
+
+#guest-form-notice .text-amber-400 {
+  color: #b45309 !important;
+}
+
+#auth-gate-screen .flip-card-front,
+#auth-gate-screen .flip-card-back {
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 1.1rem;
+  background: #fff !important;
+  color: #20352a;
+  box-shadow: 0 28px 90px rgba(5, 25, 16, 0.35);
+}
+
+#auth-gate-screen .text-white,
+#auth-gate-screen .text-slate-100 {
+  color: #20352a !important;
+}
+
+#auth-gate-screen .text-slate-300,
+#auth-gate-screen .text-slate-400 {
+  color: #617168 !important;
+}
+
+#auth-gate-screen .bg-slate-950 {
+  background-color: #f5f8f6 !important;
+}
+
+#auth-gate-screen input {
+  border-color: #d1ddd5;
+}
+
+#auth-gate-screen .bg-slate-900 {
+  background-color: #fff !important;
+}
+
+#auth-gate-screen .border-slate-700\/80,
+#auth-gate-screen .border-slate-800 {
+  border-color: #dfe8e2 !important;
+}
+
+#auth-gate-screen .bg-emerald-500 {
+  background: #16834d !important;
+  color: #fff !important;
+}
+
+#auth-gate-screen .bg-blue-500 {
+  background: #236b8c !important;
+}
+
+#auth-gate-screen #card-back-admin-mode .bg-slate-950 {
+  color: #20352a;
+}
+
+.leaflet-container {
+  font-family: 'Source Sans 3', sans-serif !important;
+  background: #eaf0ec !important;
+}
+
+.leaflet-container {
+  color: #243a2f;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #fff !important;
+  color: #263a30 !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 12px 30px rgba(16, 39, 25, 0.18) !important;
+  border: 1px solid #dbe5de;
+}
+
+.leaflet-popup-tip {
+  background: #fff !important;
+}
+
+/* Custom Animations */
+@keyframes bounceOnce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.animate-bounce-once {
+  animation: bounceOnce 0.6s ease-in-out 1;
+}
+
+/* Glassmorphism Panels */
+.glass-panel {
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 3D FLIP CARD LOGIN & AUTH GATE */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.flip-card-inner {
+  display: grid;
+  position: relative;
+  width: 100%;
+  transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+  transform-style: preserve-3d;
+}
+
+.flip-card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  grid-area: 1 / 1;
+  width: 100%;
+  min-width: 0;
+  position: relative;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 1.5rem;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+}
+
+#auth-gate-screen {
+  font-family: 'Source Sans 3', sans-serif;
+}
+
+#auth-gate-screen h2 {
+  font-family: 'Lora', Georgia, serif;
+}
+
+#auth-gate-screen button {
+  line-height: 1.35;
+}
+
+@media (max-width: 768px) {
+  #main-app-wrapper > header > div {
+    min-height: 68px;
+  }
+
+  #main-app-wrapper > header a[href="#"] p {
+    max-width: 150px;
+    line-height: 1.35;
+  }
+
+  #main-app-wrapper > main {
+    gap: 2.25rem;
+  }
+
+  #main-app-wrapper > main > section:not(:first-child) {
+    width: calc(100% - 2rem);
+  }
+
+  #main-app-wrapper > main > section:first-child {
+    min-height: 410px;
+    padding: 3.5rem 1.25rem 5.5rem;
+    background-position: 58% center;
+  }
+
+  .government-hero h1 {
+    font-size: clamp(2.2rem, 10vw, 3.35rem);
+  }
+
+  .government-hero p {
+    font-size: 0.92rem;
+  }
+
+  #main-app-wrapper > main > section:nth-child(2) {
+    margin-top: -3.25rem;
+  }
+
+}
+
+@media (max-width: 1023px) {
+  #main-app-wrapper > header > div {
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    row-gap: 0.35rem;
+    padding-top: 0.65rem;
+    padding-bottom: 0.5rem;
+  }
+
+  #main-app-wrapper > header .gov-header-controls {
+    order: 2;
+    margin-left: auto;
+  }
+
+  #main-app-wrapper > header nav.gov-main-nav {
+    order: 3;
+    flex: 0 0 100%;
+    width: 100%;
+    min-width: 0;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: clamp(0.6rem, 2.4vw, 1.5rem);
+    overflow-x: auto;
+    white-space: nowrap;
+    border-top: 1px solid #edf1ee;
+    margin-top: 0.5rem;
+    padding: 0.35rem 0.1rem 0.1rem;
+    scrollbar-width: thin;
+  }
+
+  #main-app-wrapper > header nav.gov-main-nav a {
+    flex: 0 0 auto;
+    width: auto;
+    padding: 0.45rem 0.2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  #main-app-wrapper > header #btn-toggle-navigation {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.7rem;
+    border: 1px solid #d5e1d9;
+    border-radius: 0.7rem;
+    background: #f7faf8;
+    color: #24563a;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  #main-app-wrapper > header nav.gov-main-nav {
+    display: none;
+    order: 4;
+    flex: 0 0 100%;
+    margin-top: 0.25rem;
+    padding: 0.65rem;
+    overflow: visible;
+    white-space: normal;
+    border: 1px solid #e2ebe5;
+    border-radius: 0.85rem;
+    background: #fff;
+    box-shadow: 0 10px 24px rgba(23, 43, 36, 0.08);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.4rem;
+  }
+
+  #main-app-wrapper > header nav.gov-main-nav.is-open {
+    display: grid;
+  }
+
+  #main-app-wrapper > header nav.gov-main-nav a {
+    display: flex;
+    align-items: center;
+    min-height: 42px;
+    width: auto;
+    padding: 0.65rem 0.75rem;
+    border-radius: 0.6rem;
+    background: #f5f8f6;
+    color: #34483d;
+    font-size: 0.78rem;
+  }
+
+  #main-app-wrapper > header nav.gov-main-nav a:hover,
+  #main-app-wrapper > header nav.gov-main-nav a[aria-current="page"] {
+    background: #e8f3eb;
+    color: #155d3b;
+  }
+
+  #main-app-wrapper > header nav.gov-main-nav::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  #main-app-wrapper > header > div {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  #main-app-wrapper > header a[href="#"] p {
+    display: none;
+  }
+
+  #main-app-wrapper > header #user-profile-badge {
+    gap: 0.35rem;
+    padding: 0.35rem 0.45rem;
+  }
+
+  #main-app-wrapper > header #user-name-text {
+    max-width: 76px;
+    font-size: 0.65rem;
+  }
+
+  #main-app-wrapper > header #user-role-text {
+    display: none;
+  }
+
+  #main-app-wrapper > header #btn-logout {
+    margin-left: 0;
+    width: 24px;
+    overflow: hidden;
+    font-size: 0;
+  }
+
+  #main-app-wrapper > header #btn-logout::before {
+    content: "×";
+    font-size: 1.15rem;
+  }
+
+  #main-app-wrapper > header #btn-open-inbox {
+    padding: 0.55rem;
+  }
+
+  #main-app-wrapper > header nav.gov-main-nav {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 360px) {
+  #main-app-wrapper > main > section:nth-child(2) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.65rem;
+  }
+
+  #main-app-wrapper > main > section:nth-child(2) > div {
+    min-width: 0;
+    gap: 0.65rem;
+    padding: 0.8rem;
+  }
+
+  #main-app-wrapper > main > section:nth-child(2) > div > div:first-child {
+    flex: 0 0 auto;
+    padding: 0.55rem;
+    font-size: 1.15rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  #main-app-wrapper > header nav.gov-main-nav a {
+    white-space: nowrap;
+  }
+}
+
+#main-app-wrapper > header nav.gov-main-nav a.hidden {
+  display: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .flip-card-inner {
+    transition-duration: 0.25s !important;
+  }
+}

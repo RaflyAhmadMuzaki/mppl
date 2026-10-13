@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIMPEL - Sistem Informasi Pelaporan Lingkungan Kota</title>
+  
+  <!-- Manifest & Meta Tags -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#14532d">
+  <meta name="description" content="SIMPEL - Sistem Informasi Pelaporan Lingkungan Kota Berbasis Web dengan Geo-Tagging dan Real-Time Tracking - MPPL">
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+  <link rel="apple-touch-icon" href="/icons/icon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#ecfdf5',
+              500: '#10b981',
+              600: '#059669',
+              900: '#064e3b',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Leaflet CSS & JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- EmailJS Browser SDK -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="/src/css/style.css">
+</head>
+<body class="min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+  <!-- Offline Status Badge -->
+  <div id="offline-badge" class="hidden bg-amber-600 text-white text-xs font-bold text-center py-1.5 px-4 shadow-md sticky top-0 z-[10000]">
+    ⚠️ Mode offline aktif. Data tersimpan secara lokal di perangkat Anda.
+  </div>
+
+  <!-- App Install Banner (No PWA word used) -->
+  <div id="pwa-install-banner" class="hidden bg-gradient-to-r from-emerald-900 to-slate-900 border-b border-emerald-500/30 py-2.5 px-4 z-[9999]">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex items-center gap-2">
+        <span class="text-xl">📱</span>
+        <div>
+          <span class="font-bold text-emerald-400">Pasang Aplikasi SIMPEL di Perangkat Anda!</span>
+          <span class="text-slate-300 hidden sm:inline"> — Akses cepat langsung dari layar utama perangkat Anda.</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button id="btn-install-pwa" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg transition shadow">
+          Unduh Aplikasi
+        </button>
+        <button onclick="document.getElementById('pwa-install-banner').remove()" class="text-slate-400 hover:text-white px-2">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL AUTH GATE WITH 3D FLIP CARD -->
+  <div id="auth-gate-screen" class="hidden fixed inset-0 z-[100000] flex items-center justify-center p-4 overflow-y-auto">
+    <div class="w-full max-w-md perspective-1000 my-auto">
+      
+      <!-- 3D Flip Container -->
+      <div id="flip-card-container" class="flip-card-inner">
+
+        <!-- FRONT FACE: LOGIN MASYARAKAT -->
+        <div class="flip-card-front bg-slate-900 border border-slate-700/80 p-6 sm:p-8 shadow-2xl space-y-6 relative">
+          
+          <!-- Modal Close Button -->
+          <button id="btn-close-gate-front" type="button" aria-label="Tutup dialog login" class="btn-close-gate">✕</button>
+
+          <div class="text-center">
+            <div class="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl mx-auto flex items-center justify-center text-slate-950 font-black text-2xl shadow-lg border border-emerald-300/40 mb-3">
+              S
+            </div>
+            <h2 class="text-2xl font-black text-white tracking-tight">SIMPEL</h2>
+            <p class="text-xs text-slate-400 mt-1">Sistem Informasi Pelaporan Lingkungan Kota</p>
+            <div class="mt-3 inline-block bg-emerald-500/10 border border-emerald-500/30 px-3 py-1 rounded-full text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
+              Login Masyarakat (Pelapor)
+            </div>
+            <div id="gate-reason-badge" class="hidden mt-2 p-2 rounded-xl bg-emerald-950/40 border border-emerald-500/30 text-[11px] text-emerald-300 font-semibold">
+              Silakan masuk terlebih dahulu untuk menyampaikan aduan
+            </div>
+          </div>
+
+          <!-- Step 1 Form (Email + OTP Request) -->
+          <div id="gate-front-step1" class="space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Nama Lengkap</label>
+              <input type="text" id="gate-masyarakat-nama" placeholder="Contoh: Ahmad Subagja" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-emerald-500"/>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Alamat Email Asli *</label>
+              <input type="email" id="gate-masyarakat-email" required placeholder="nama@gmail.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-emerald-500"/>
+            </div>
+
+            <button id="btn-gate-send-otp-masyarakat" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs rounded-xl transition shadow-lg shadow-emerald-500/20">
+              Kirim Kode OTP Ke Email
+            </button>
+          </div>
+
+          <!-- Step 2 Form (OTP Verification) -->
+          <div id="gate-front-step2" class="hidden space-y-4">
+            <div class="bg-emerald-950/40 border border-emerald-500/30 p-3 rounded-xl text-center">
+              <p class="text-xs text-emerald-300">Kode OTP 6-Digit dikirim ke email:</p>
+              <p id="gate-masyarakat-target-email" class="font-bold text-white text-xs mt-0.5">user@gmail.com</p>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Masukkan Kode OTP 6-Digit *</label>
+              <input type="text" id="gate-masyarakat-otp-input" maxlength="6" placeholder="123456" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-xl font-mono font-bold tracking-widest text-emerald-400 focus:outline-none focus:border-emerald-500"/>
+            </div>
+
+            <button id="btn-gate-verify-otp-masyarakat" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs rounded-xl transition shadow">
+              Verifikasi & Masuk SIMPEL
+            </button>
+            <button id="btn-gate-resend-otp-masyarakat" type="button" class="w-full text-xs text-emerald-400 hover:text-emerald-300 font-bold">
+              Kirim Ulang Kode OTP
+            </button>
+            <button id="btn-gate-back-to-email-masyarakat" type="button" class="w-full text-xs text-slate-500 hover:text-slate-700 font-semibold">
+              ← Ganti alamat email
+            </button>
+          </div>
+
+          <!-- Footer Switch Links -->
+          <div class="pt-4 border-t border-slate-800 space-y-2 text-center text-xs">
+            <button id="btn-flip-to-register" class="w-full text-emerald-400 hover:text-emerald-300 font-bold block transition py-1">
+              📝 Belum Punya Akun? Registrasi Baru
+            </button>
+            <button id="btn-flip-to-admin" class="w-full text-slate-400 hover:text-slate-200 font-semibold block transition py-1">
+              🛡️ Masuk Khusus Petugas Admin Kota 🔄
+            </button>
+          </div>
+
+        </div>
+
+
+        <!-- BACK FACE: DYNAMIC (LOGIN ADMIN / REGISTRASI) -->
+        <div class="flip-card-back bg-slate-900 border border-slate-700/80 p-6 sm:p-8 shadow-2xl space-y-6 relative">
+          
+          <!-- Modal Close Button -->
+          <button id="btn-close-gate-back" type="button" aria-label="Tutup dialog login" class="btn-close-gate">✕</button>
+
+          <!-- State A: LOGIN ADMIN -->
+          <div id="card-back-admin-mode" class="space-y-5">
+            <div class="text-center">
+              <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl mx-auto flex items-center justify-center text-white font-black text-2xl shadow-lg border border-blue-400/40 mb-3">
+                🛡️
+              </div>
+              <h2 class="text-xl font-black text-white tracking-tight">PORTAL PETUGAS ADMIN</h2>
+              <p class="text-xs text-slate-400 mt-1">Khusus Dinas Lingkungan Hidup & Petugas Kota</p>
+              <div class="mt-2 inline-block bg-blue-500/10 border border-blue-500/30 px-3 py-1 rounded-full text-[10px] font-bold text-blue-400 uppercase tracking-wider">
+                Database Petugas Terverifikasi
+              </div>
+            </div>
+
+            <!-- Demo Admin Accounts Selector -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+            <label class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1">Pilih akun petugas:</label>
+              <select id="admin-demo-selector" class="w-full bg-slate-900 border border-slate-700 text-xs text-emerald-400 font-bold rounded-lg p-2">
+                <option value="admin@simpel.go.id">Ir. Hendy Kusuma (admin@simpel.go.id)</option>
+                <option value="petugas.dlh@simpel.go.id">Budi Santoso, S.T. (petugas.dlh@simpel.go.id)</option>
+              </select>
+            </div>
+
+            <div id="gate-admin-form" class="space-y-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Email Petugas Admin *</label>
+                <input type="email" id="gate-admin-email" value="admin@simpel.go.id" required placeholder="Email petugas" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-blue-500"/>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Password Petugas *</label>
+                <div class="relative">
+                  <input type="password" id="gate-admin-password" value="" required placeholder="Masukkan password petugas" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-blue-500"/>
+                  <button type="button" id="btn-toggle-admin-pwd" class="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs p-1">👁️</button>
+                </div>
+              </div>
+
+              <button id="btn-gate-login-admin" class="w-full py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-extrabold text-xs rounded-xl transition shadow-lg shadow-blue-500/20">
+                🛡️ Masuk Portal Admin
+              </button>
+            </div>
+
+            <button id="btn-flip-back-to-masyarakat-from-admin" class="w-full text-slate-400 hover:text-white font-bold text-xs pt-3 border-t border-slate-800 block text-center transition">
+              ← Kembali ke Login Masyarakat
+            </button>
+          </div>
+
+          <!-- State B: REGISTRASI MASYARAKAT -->
+          <div id="card-back-register-mode" class="hidden space-y-4">
+            <div class="text-center">
+              <div class="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-2xl mx-auto flex items-center justify-center text-2xl font-bold mb-2">
+                📝
+              </div>
+              <h2 class="text-xl font-black text-white tracking-tight">REGISTRASI AKUN MASYARAKAT</h2>
+              <p class="text-xs text-slate-400">Daftarkan diri Anda untuk menyampaikan aduan lingkungan.</p>
+            </div>
+
+            <div id="gate-reg-step1" class="space-y-3">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">Nama Lengkap *</label>
+                <input type="text" id="reg-nama" required placeholder="Contoh: Ahmad Subagja" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-100"/>
+              </div>
+
+              <div>
+                <label class="block text-[11px] font-bold text-slate-300 uppercase tracking-wider mb-1">Email Asli *</label>
+                <input type="email" id="reg-email" required placeholder="nama@gmail.com" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2.5 text-xs text-slate-100"/>
+              </div>
+
+              <button id="btn-gate-send-otp-reg" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs rounded-xl transition shadow mt-2">
+                Kirim Kode OTP Registrasi
+              </button>
+            </div>
+
+            <div id="gate-reg-step2" class="hidden space-y-4">
+              <div class="bg-emerald-950/40 border border-emerald-500/30 p-3 rounded-xl text-center">
+                <p class="text-xs text-emerald-300">Kode OTP Registrasi dikirim ke email:</p>
+                <p id="gate-reg-target-email" class="font-bold text-white text-xs mt-0.5">user@gmail.com</p>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1.5">Masukkan Kode OTP 6-Digit *</label>
+                <input type="text" id="gate-reg-otp-input" maxlength="6" placeholder="123456" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-xl font-mono font-bold tracking-widest text-emerald-400 focus:outline-none focus:border-emerald-500"/>
+              </div>
+
+              <button id="btn-gate-verify-otp-reg" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs rounded-xl transition shadow">
+                Selesaikan Registrasi & Masuk
+              </button>
+              <button id="btn-gate-resend-otp-reg" type="button" class="w-full text-xs text-emerald-400 hover:text-emerald-300 font-bold">
+                Kirim Ulang Kode OTP
+              </button>
+              <button id="btn-gate-back-to-email-reg" type="button" class="w-full text-xs text-slate-500 hover:text-slate-700 font-semibold">
+                ← Ganti alamat email
+              </button>
+            </div>
+
+            <button id="btn-flip-back-to-masyarakat-from-reg" class="w-full text-slate-400 hover:text-white font-bold text-xs pt-3 border-t border-slate-800 block text-center transition">
+              ← Sudah Punya Akun? Login di sini
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MAIN APP WRAPPER (UNLOCKED AFTER AUTHENTICATION) -->
+  <div id="main-app-wrapper" class="flex-1 flex flex-col">
+
+    <!-- Header / Navigation Bar -->
+    <header class="sticky top-0 z-40 border-b">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        
+        <!-- Logo & Brand -->
+        <a href="#" class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg border border-emerald-300/30">
+            S
+          </div>
+          <div>
+            <span class="font-extrabold text-base sm:text-lg tracking-tight text-white flex items-center gap-1.5">
+              SIMPEL
+            </span>
+            <p class="text-[10px] text-slate-400 -mt-1 font-medium">Sistem Pelaporan Lingkungan Kota</p>
+          </div>
+        </a>
+
+        <!-- Center Nav Links -->
+        <nav id="main-navigation" class="gov-main-nav flex items-center gap-6 text-xs font-semibold text-slate-300" aria-label="Navigasi utama">
+          <a href="#tentang-simpel" class="hover:text-emerald-400 transition">Tentang SIMPEL</a>
+          <a data-nav-role="masyarakat" href="#section-user-form" class="hover:text-emerald-400 transition">Buat Laporan</a>
+          <a data-nav-role="admin" href="#section-admin-panel" class="hidden hover:text-emerald-400 transition">Kelola Aduan</a>
+          <a data-nav-role="masyarakat" href="#status-laporan" class="hover:text-emerald-400 transition">Status Aduan</a>
+          <a href="#peta-laporan" class="hover:text-emerald-400 transition">Peta Sebaran</a>
+          <a href="#statistik" class="hover:text-emerald-400 transition">Grafik Rekap</a>
+        </nav>
+
+        <!-- Right Controls: Role Switcher, Mail Inbox & Auth Profile -->
+        <div class="gov-header-controls flex items-center gap-2 sm:gap-3">
+          <button id="btn-toggle-navigation" type="button" class="hidden" aria-controls="main-navigation" aria-expanded="false" aria-label="Buka navigasi">
+            <span class="nav-toggle-icon" aria-hidden="true">☰</span>
+            <span class="nav-toggle-label">Menu</span>
+          </button>
+
+          <!-- Web Inbox Button (OTP Email Reader) -->
+          <button id="btn-open-inbox" title="Buka Kotak Masuk Email OTP" class="relative p-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-slate-200 text-xs flex items-center gap-1.5 transition">
+            <span aria-hidden="true">✉</span>
+            <span class="hidden sm:inline font-medium">Inbox Email</span>
+          </button>
+
+          <!-- Login Button for Guest -->
+          <button id="btn-open-login" title="Masuk / Login ke Akun SIMPEL" class="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl transition flex items-center gap-1.5 shadow">
+            <span aria-hidden="true">🔑</span>
+            <span>Masuk / Login</span>
+          </button>
+
+          <!-- User Profile Badge -->
+          <div id="user-profile-badge" class="hidden flex items-center gap-2 bg-slate-800/80 border border-slate-700 px-3 py-1.5 rounded-xl">
+            <div class="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 font-extrabold text-xs flex items-center justify-center">👤</div>
+            <div class="text-left text-xs">
+              <div id="user-name-text" class="font-bold text-slate-100 truncate max-w-[110px]">User</div>
+              <div id="user-role-text" class="text-[9px] text-emerald-400 uppercase font-semibold">Masyarakat</div>
+            </div>
+            <button id="btn-logout" title="Keluar / Ganti Akun" class="ml-1 text-slate-400 hover:text-rose-400 text-xs font-bold">✕ Keluar</button>
+          </div>
+
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Body Content -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-12">
+
+      <!-- Hero Section -->
+      <section class="government-hero relative overflow-hidden">
+        <div class="absolute -right-20 -bottom-20 w-96 h-96 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="relative z-10 max-w-3xl">
+          <div class="gov-hero-kicker">
+            <span id="hero-kicker-public">PORTAL LAYANAN PUBLIK</span>
+            <span id="hero-kicker-admin" class="hidden">DASHBOARD PETUGAS</span>
+            <span aria-hidden="true">•</span>
+            <span id="hero-kicker-topic">PELAPORAN LINGKUNGAN</span>
+          </div>
+          <h1 id="hero-title-public" class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+            Suara Warga, Lingkungan Kota yang Lebih Baik.
+          </h1>
+          <h1 id="hero-title-admin" class="hidden text-3xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight mb-4">
+            Tindak Lanjut Aduan Warga dengan Cepat dan Terbuka.
+          </h1>
+          <p id="hero-description-public" class="text-sm sm:text-base text-slate-300 mb-6 leading-relaxed">
+            Sampaikan laporan masalah lingkungan dan fasilitas umum di sekitar Anda. Petugas akan meninjau laporan, menindaklanjuti, dan memperbarui perkembangannya agar dapat dipantau secara terbuka.
+          </p>
+          <p id="hero-description-admin" class="hidden text-sm sm:text-base text-slate-300 mb-6 leading-relaxed">
+            Tinjau laporan yang masuk, perbarui status penanganan, dan pantau sebaran serta rekap aduan di wilayah layanan.
+          </p>
+
+          <div id="hero-actions-public" class="flex flex-wrap gap-4">
+            <a id="btn-hero-lapor" href="#section-user-form" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/20 transition flex items-center gap-2">
+              <span aria-hidden="true">＋</span> Sampaikan Aduan
+            </a>
+            <a href="#tentang-simpel" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-bold text-sm border border-slate-700 transition flex items-center gap-2">
+              <span aria-hidden="true">ℹ️</span> Tentang SIMPEL
+            </a>
+            <a href="#peta-laporan" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-bold text-sm border border-slate-700 transition flex items-center gap-2">
+              <span aria-hidden="true">⌖</span> Lihat Sebaran Laporan
+            </a>
+          </div>
+          <div id="hero-actions-admin" class="hidden flex flex-wrap gap-4">
+            <a href="#section-admin-panel" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/20 transition flex items-center gap-2">
+              <span aria-hidden="true">✓</span> Kelola Laporan
+            </a>
+            <a href="#peta-laporan" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-bold text-sm border border-slate-700 transition flex items-center gap-2">
+              <span aria-hidden="true">⌖</span> Lihat Sebaran Aduan
+            </a>
+          </div>
+          <div id="hero-note-public" class="gov-hero-note">
+            <span aria-hidden="true">✓</span>
+            Pantau laporan Anda dengan nomor laporan dan pembaruan dari petugas
+          </div>
+          <div id="hero-note-admin" class="hidden gov-hero-note">
+            <span aria-hidden="true">✓</span>
+            Perubahan status dan catatan petugas akan terlihat oleh pelapor
+          </div>
+        </div>
+      </section>
+
+      <!-- Metrics & Statistics Counters -->
+      <section class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl shadow-xl flex items-center gap-4">
+          <div class="p-3 bg-blue-500/10 text-blue-400 rounded-xl border border-blue-500/20 text-2xl" aria-hidden="true">01</div>
+          <div>
+            <div class="text-2xl font-black text-white" id="stat-total">128</div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Laporan Masuk</div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl shadow-xl flex items-center gap-4">
+          <div class="p-3 bg-amber-500/10 text-amber-400 rounded-xl border border-amber-500/20 text-2xl" aria-hidden="true">02</div>
+          <div>
+            <div class="text-2xl font-black text-amber-400" id="stat-pending">36</div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Menunggu Verifikasi</div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl shadow-xl flex items-center gap-4">
+          <div class="p-3 bg-cyan-500/10 text-cyan-400 rounded-xl border border-cyan-500/20 text-2xl" aria-hidden="true">03</div>
+          <div>
+            <div class="text-2xl font-black text-cyan-400" id="stat-process">64</div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Sedang Diproses</div>
+          </div>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 p-5 rounded-2xl shadow-xl flex items-center gap-4">
+          <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl border border-emerald-500/20 text-2xl" aria-hidden="true">04</div>
+          <div>
+            <div class="text-2xl font-black text-emerald-400" id="stat-done">28</div>
+            <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Selesai Ditangani</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: Tentang SIMPEL (Pengertian, Tujuan, Fitur, dan Alur) -->
+      <section id="tentang-simpel" class="scroll-mt-24 space-y-8">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+              Tentang SIMPEL
+            </h2>
+            <p class="text-xs text-slate-400">Pengertian, tujuan, fitur unggulan, dan alur pelaporan lingkungan kota.</p>
+          </div>
+          <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-full">PROFIL & EDUKASI</span>
+        </div>
+
+        <!-- Main Introduction Card (Pengertian) -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            <div class="lg:col-span-8 space-y-4">
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
+                🌱 Transformasi Digital Pelayanan Lingkungan Hidup
+              </div>
+              <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+                Apa Itu <span class="text-emerald-400">SIMPEL</span>?
+              </h3>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed text-justify">
+                <b>SIMPEL (Sistem Informasi Pelaporan Lingkungan Kota)</b> adalah platform layanan publik digital berbasis web dan geospasial yang dirancang untuk menjembatani partisipasi aktif masyarakat perkotaan dengan Dinas Lingkungan Hidup (DLH) serta instansi penanganan fasilitas kota.
+              </p>
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed text-justify">
+                Melalui SIMPEL, setiap warga dapat melaporkan permasalahan lingkungan di sekitar mereka secara cepat, presisi, dan terdokumentasi — mulai dari penumpukan sampah liar, saluran drainase tersumbat, pencemaran limbah, hingga kerusakan fasilitas umum dan pohon rawan tumbang. Dilengkapi teknologi <i>geo-tagging</i> peta interaktif dan verifikasi bukti foto, laporan langsung terpetakan dan terdistribusi ke petugas untuk segera ditindaklanjuti secara transparan.
+              </p>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-center text-xs">
+                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
+                  <div class="text-base font-black text-emerald-400 mb-0.5">100%</div>
+                  <div class="text-[10px] text-slate-400 font-bold uppercase">Berbasis Web & PWA</div>
+                </div>
+                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
+                  <div class="text-base font-black text-blue-400 mb-0.5">GPS / GIS</div>
+                  <div class="text-[10px] text-slate-400 font-bold uppercase">Geo-Tagging Presisi</div>
+                </div>
+                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
+                  <div class="text-base font-black text-amber-400 mb-0.5">Real-Time</div>
+                  <div class="text-[10px] text-slate-400 font-bold uppercase">Tracking Terbuka</div>
+                </div>
+                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
+                  <div class="text-base font-black text-purple-400 mb-0.5">OTP Cepat</div>
+                  <div class="text-[10px] text-slate-400 font-bold uppercase">Akses Aman</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-4 flex flex-col gap-3">
+              <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 space-y-2">
+                <div class="text-emerald-400 text-xl font-black">🎯 Visi</div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Mewujudkan tata kelola lingkungan perkotaan yang bersih, sehat, berkelanjutan, dan tanggap darurat melalui integrasi teknologi informasi dan kolaborasi warga.
+                </p>
+              </div>
+              <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 space-y-2">
+                <div class="text-blue-400 text-xl font-black">🏛️ Sinergi DLH Kota</div>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Menghubungkan masyarakat secara langsung dengan petugas dinas terkait demi memangkas alur birokrasi penanganan aduan lingkungan perkotaan.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tujuan Utama (4 Pilar) -->
+        <div>
+          <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <span>🎯</span> Tujuan Utama Pengembangan SIMPEL
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between hover:border-emerald-500/50 transition">
+              <div class="space-y-2.5">
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl font-bold border border-emerald-500/20">
+                  ⚡
+                </div>
+                <h4 class="text-sm font-bold text-white">1. Respons Cepat & Tanggap</h4>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Memangkas jalur pengaduan konvensional agar laporan masyarakat segera diteruskan kepada petugas lapangan dalam waktu singkat.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-semibold text-emerald-400">
+                Pangkas Birokrasi → Aksi Nyata
+              </div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between hover:border-blue-500/50 transition">
+              <div class="space-y-2.5">
+                <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl font-bold border border-blue-500/20">
+                  🔍
+                </div>
+                <h4 class="text-sm font-bold text-white">2. Transparansi & Akuntabilitas</h4>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Memberikan keterbukaan penanganan dengan nomor tiket unik, histori penanganan, dan catatan langsung dari petugas dinas.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-semibold text-blue-400">
+                Tracking 3 Tahap Terbuka
+              </div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between hover:border-amber-500/50 transition">
+              <div class="space-y-2.5">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl font-bold border border-amber-500/20">
+                  🗺️
+                </div>
+                <h4 class="text-sm font-bold text-white">3. Pemetaan Titik Rawan</h4>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Mengidentifikasi sebaran geografis titik timbulan sampah liar dan fasilitas rusak sebagai bahan analisis kebijakan kota (*data-driven*).
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-semibold text-amber-400">
+                Data Spasial Berbasis Peta
+              </div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between hover:border-purple-500/50 transition">
+              <div class="space-y-2.5">
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl font-bold border border-purple-500/20">
+                  🤝
+                </div>
+                <h4 class="text-sm font-bold text-white">4. Partisipasi Aktif Warga</h4>
+                <p class="text-xs text-slate-300 leading-relaxed">
+                  Membangun kesadaran kolektif warga kota untuk ikut menjaga kebersihan dan ketertiban lingkungan sekitar secara berkesinambungan.
+                </p>
+              </div>
+              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-semibold text-purple-400">
+                Budaya Gotong Royong Digital
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Alur Pelaporan (4 Langkah) -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
+          <div class="mb-6">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+              <span>📋</span> Alur Pelaporan Sederhana di SIMPEL
+            </h3>
+            <p class="text-xs text-slate-400">Hanya 4 langkah mudah untuk melaporkan permasalahan lingkungan hingga tuntas.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            
+            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="w-7 h-7 rounded-lg bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">1</span>
+                  <span class="text-lg">📷</span>
+                </div>
+                <h4 class="text-xs font-bold text-white">Foto Masalah</h4>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                  Temukan tumpukan sampah, jalan rusak, atau saluran mampet dan ambil foto bukti dengan jelas.
+                </p>
+              </div>
+              <div class="text-[10px] text-emerald-400 font-mono mt-3">Langkah Awal</div>
+            </div>
+
+            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="w-7 h-7 rounded-lg bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">2</span>
+                  <span class="text-lg">📍</span>
+                </div>
+                <h4 class="text-xs font-bold text-white">Tandai di Peta</h4>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                  Gunakan tombol "Lokasi Saya" atau klik langsung di peta interaktif untuk menentukan koordinat presisi.
+                </p>
+              </div>
+              <div class="text-[10px] text-emerald-400 font-mono mt-3">Geo-Tagging GPS</div>
+            </div>
+
+            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="w-7 h-7 rounded-lg bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">3</span>
+                  <span class="text-lg">🛡️</span>
+                </div>
+                <h4 class="text-xs font-bold text-white">Verifikasi Petugas</h4>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                  Petugas Dinas Lingkungan Hidup meninjau laporan, memberikan catatan, dan menerjunkan tim penanganan.
+                </p>
+              </div>
+              <div class="text-[10px] text-emerald-400 font-mono mt-3">Validasi DLH Kota</div>
+            </div>
+
+            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative">
+              <div class="space-y-2">
+                <div class="flex items-center justify-between">
+                  <span class="w-7 h-7 rounded-lg bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">4</span>
+                  <span class="text-lg">✅</span>
+                </div>
+                <h4 class="text-xs font-bold text-white">Penanganan Tuntas</h4>
+                <p class="text-[11px] text-slate-400 leading-relaxed">
+                  Masalah lingkungan diselesaikan dan status laporan otomatis terbarui menjadi "Selesai" di sistem.
+                </p>
+              </div>
+              <div class="text-[10px] text-emerald-400 font-mono mt-3">Pantau Real-Time</div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Kategori Masalah Yang Dilayani -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3">
+            <span class="text-2xl">🗑️</span>
+            <div>
+              <div class="text-xs font-bold text-white">Sampah Liar</div>
+              <div class="text-[10px] text-slate-400">TPA ilegal & limbah warga</div>
+            </div>
+          </div>
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3">
+            <span class="text-2xl">💧</span>
+            <div>
+              <div class="text-xs font-bold text-white">Air & Drainase</div>
+              <div class="text-[10px] text-slate-400">Selokan mampet & genangan</div>
+            </div>
+          </div>
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3">
+            <span class="text-2xl">🛣️</span>
+            <div>
+              <div class="text-xs font-bold text-white">Jalan & Fasilitas</div>
+              <div class="text-[10px] text-slate-400">Trotoar, lampu & halte</div>
+            </div>
+          </div>
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3">
+            <span class="text-2xl">🌳</span>
+            <div>
+              <div class="text-xs font-bold text-white">Ruang Terbuka Hijau</div>
+              <div class="text-[10px] text-slate-400">Taman & pohon rawan tumbang</div>
+            </div>
+          </div>
+          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3">
+            <span class="text-2xl">⚠️</span>
+            <div>
+              <div class="text-xs font-bold text-white">Pencemaran Lingkungan</div>
+              <div class="text-[10px] text-slate-400">Limbah industri & polusi</div>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- SECTION 1: Form Laporan & Geo-Tagging (User Role) -->
+      <section id="section-user-form" class="scroll-mt-24 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+              Pelaporan Lingkungan
+            </h2>
+            <p class="text-xs text-slate-400">Isi formulir dan tandai lokasi pasti permasalahan di peta interaktif.</p>
+          </div>
+          <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-full">FORM ADUAN</span>
+        </div>
+
+        <!-- Guest Login Notice Banner -->
+        <div id="guest-form-notice" class="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <span class="text-2xl" aria-hidden="true">🔐</span>
+            <div>
+              <p class="text-xs font-bold text-amber-400">Mode Penjelajahan (Tamu)</p>
+              <p class="text-xs text-slate-300">Anda dapat melihat formulir dan peta sebaran. Untuk menyampaikan pengaduan resmi dan mendapatkan tiket pelacakan, silakan masuk ke akun Anda.</p>
+            </div>
+          </div>
+          <button type="button" id="btn-login-from-form" class="shrink-0 px-4 py-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs rounded-xl transition shadow">
+            Masuk / Login Sekarang
+          </button>
+        </div>
+
+        <form id="form-laporan-lingkungan" class="grid grid-cols-1 lg:grid-cols-12 gap-8 bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
+          
+          <!-- Left Inputs -->
+          <div class="lg:col-span-6 space-y-4">
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Judul Laporan Aduan *</label>
+              <input type="text" id="input-judul" required placeholder="Contoh: Tumpukan Sampah Liar Menggangu Jalan" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-emerald-500 transition"/>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Kategori Masalah *</label>
+                <select id="input-kategori" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-emerald-500 transition">
+                  <option value="Sampah">🗑️ Sampah Liar</option>
+                  <option value="Jalan & Fasilitas">🛣️ Jalan & Fasilitas Umum</option>
+                  <option value="Air & Drainase">💧 Air & Drainase</option>
+                  <option value="Ruang Terbuka">🌳 Ruang Terbuka Hijau</option>
+                  <option value="Lainnya">⚠️ Lainnya</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Wilayah terdeteksi</label>
+                <input type="text" id="input-wilayah" readonly placeholder="Pilih lokasi di peta" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100"/>
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Unggah Bukti Foto *</label>
+              <input type="file" id="input-foto" accept="image/*" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2 text-xs text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-500 cursor-pointer"/>
+              <img id="preview-foto" src="" alt="Preview" class="hidden mt-3 w-full h-40 object-cover rounded-xl border border-slate-700"/>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Deskripsi Detail Kronologi *</label>
+              <textarea id="input-deskripsi" rows="3" required placeholder="Jelaskan secara detail permasalahan lingkungan yang ditemukan..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100 focus:outline-none focus:border-emerald-500 transition"></textarea>
+            </div>
+          </div>
+
+          <!-- Right Geo Picker Map -->
+          <div class="lg:col-span-6 flex flex-col justify-between space-y-4">
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider">Pilih lokasi laporan *</label>
+                <button type="button" id="btn-use-gps" class="text-xs bg-slate-800 hover:bg-slate-700 text-emerald-400 px-3 py-1 rounded-lg border border-slate-700 font-bold transition flex items-center gap-1">
+                  <span aria-hidden="true">⌖</span> Lokasi saya
+                </button>
+              </div>
+
+              <div id="form-cari-lokasi" class="flex gap-2 mb-2">
+                <input type="search" id="input-cari-lokasi" autocomplete="off" placeholder="Cari kota, kabupaten, atau alamat di Indonesia" aria-label="Cari lokasi di Indonesia" class="min-w-0 flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-100"/>
+                <button type="button" id="btn-cari-lokasi" class="shrink-0 bg-slate-800 hover:bg-slate-700 text-emerald-400 px-3 py-2 rounded-xl border border-slate-700 text-xs font-bold">Cari</button>
+              </div>
+              <p id="location-help" class="mb-2 text-[11px] text-slate-400">Cari kota/kabupaten atau klik peta untuk menandai lokasi di Indonesia.</p>
+              <div id="map-picker" class="w-full h-64 border border-slate-700"></div>
+              
+              <div class="mt-2 text-[11px] text-slate-400 flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+                <span id="input-alamat-display" class="truncate font-mono">Pilih lokasi di peta atau gunakan GPS.</span>
+                <span id="coord-display" class="font-bold text-emerald-400 ml-2 whitespace-nowrap">Koordinat belum dipilih</span>
+              </div>
+              <p id="location-accuracy" class="mt-1 text-[11px] text-slate-500">Lokasi dapat dipilih di seluruh Indonesia.</p>
+              <input type="hidden" id="input-alamat" value=""/>
+            </div>
+
+            <button type="submit" class="w-full py-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black text-sm rounded-xl transition shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2">
+              <span>🚀</span> KIRIM LAPORAN SEKARANG
+            </button>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- SECTION 2: Pemantauan Status Real-time Laporan -->
+      <section id="status-laporan" class="scroll-mt-24 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+              Pemantauan Status Aduan
+            </h2>
+            <p class="text-xs text-slate-400">Tracking status perbaikan dengan catatan langsung dari petugas kota.</p>
+          </div>
+          <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-full">Tracking Realtime</span>
+        </div>
+
+        <div id="list-laporan-masyarakat" class="space-y-4">
+          <!-- Rendered dynamically -->
+        </div>
+      </section>
+
+      <!-- SECTION 3: Peta Persebaran Laporan Interaktif -->
+      <section id="peta-laporan" class="scroll-mt-24 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+              Peta Sebaran Laporan Lingkungan
+            </h2>
+            <p class="text-xs text-slate-400">Peta mencakup seluruh Indonesia; titik contoh saat ini berada di sekitar Jakarta.</p>
+          </div>
+          <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-full">Peta Nasional</span>
+        </div>
+
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-2xl space-y-4">
+          <div id="map-distribution" class="w-full h-96 border border-slate-700"></div>
+        </div>
+      </section>
+
+      <!-- SECTION 4: Panel Admin & Verifikasi Validasi Laporan -->
+      <section id="section-admin-panel" class="hidden scroll-mt-24 space-y-6 bg-slate-900/90 border border-emerald-500/40 rounded-3xl p-6 sm:p-8 shadow-2xl">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-2xl font-bold text-emerald-400 flex items-center gap-2">
+              Panel Verifikasi Petugas Kota
+            </h2>
+            <p class="text-xs text-slate-400">Kelola, beri catatan petugas, dan perbarui status aduan masyarakat.</p>
+          </div>
+          <span class="px-3 py-1 bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-bold rounded-full">Portal Admin</span>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-slate-800">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="bg-slate-950 text-slate-400 text-[11px] uppercase tracking-wider border-b border-slate-800">
+                <th class="p-3">ID Laporan</th>
+                <th class="p-3">Judul & Alamat</th>
+                <th class="p-3">Kategori / Wilayah</th>
+                <th class="p-3">Pelapor</th>
+                <th class="p-3">Status</th>
+                <th class="p-3">Aksi Petugas</th>
+              </tr>
+            </thead>
+            <tbody id="table-admin-reports">
+              <!-- Dynamic rows -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECTION 5: Dashboard Grafik Rekap & Statistik -->
+      <section id="statistik" class="scroll-mt-24 space-y-6">
+        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+          <div>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+              Dashboard Statistik & Rekap Laporan
+            </h2>
+            <p class="text-xs text-slate-400">Grafik rekapitulasi laporan berdasarkan kategori dan status penanganan.</p>
+          </div>
+          <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-full">Grafik Rekap</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          
+          <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between">
+            <h3 class="text-sm font-bold text-slate-200 mb-4 flex items-center gap-2">
+              <span>🍩</span> Grafik Laporan Per Kategori
+            </h3>
+            <div class="relative w-full h-64">
+              <canvas id="chart-kategori"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between md:col-span-2">
+            <h3 class="text-sm font-bold text-slate-200 mb-4 flex items-center gap-2">
+              <span>📍</span> Sebaran Laporan Per Wilayah
+            </h3>
+            <div class="relative w-full h-64">
+              <canvas id="chart-wilayah"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 shadow-xl flex flex-col justify-between">
+            <h3 class="text-sm font-bold text-slate-200 mb-4 flex items-center gap-2">
+              <span>📊</span> Rekap Status Penanganan Aduan
+            </h3>
+            <div class="relative w-full h-64">
+              <canvas id="chart-status"></canvas>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-8 text-center text-xs text-slate-400">
+      <div class="max-w-7xl mx-auto px-4">
+        <p>© 2026 <b>SIMPEL (Sistem Informasi Pelaporan Lingkungan Kota)</b> — Tugas MPPL S5 Informatika</p>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- MODAL: SIMULATED MAILBOX INBOX (FOR OTP EMAIL DEMO) -->
+  <div id="modal-inbox" class="hidden fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-2xl rounded-3xl p-6 shadow-2xl relative">
+      <button id="btn-close-inbox" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg font-bold">✕</button>
+      
+      <div class="flex items-center gap-3 mb-4 border-b border-slate-800 pb-3">
+        <span class="text-2xl">📬</span>
+        <div>
+          <h3 class="text-lg font-extrabold text-white">Kotak Masuk Email OTP SIMPEL</h3>
+          <p class="text-xs text-slate-400">Menampilkan rekaman email OTP yang dikirim oleh sistem.</p>
+        </div>
+      </div>
+
+      <div id="inbox-mail-list" class="max-h-96 overflow-y-auto pr-1">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: ADMIN ACTION UPDATE -->
+  <div id="modal-admin-action" class="hidden fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 w-full max-w-md rounded-3xl p-6 shadow-2xl relative">
+      <button onclick="document.getElementById('modal-admin-action').classList.add('hidden')" class="absolute top-5 right-5 text-slate-400 hover:text-white text-lg font-bold">✕</button>
+
+      <h3 class="text-base font-extrabold text-white mb-1">Kelola Status Laporan</h3>
+      <p id="admin-modal-id" class="text-xs text-emerald-400 font-mono font-bold mb-3">LAP-2026-001</p>
+      <p id="admin-modal-judul" class="text-xs text-slate-300 font-semibold mb-4 bg-slate-950 p-2.5 rounded-xl border border-slate-800"></p>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">Pilih Status Baru</label>
+          <select id="admin-modal-status-select" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100">
+            <option value="Menunggu Verifikasi">⏳ Menunggu Verifikasi</option>
+            <option value="Diproses">🔄 Diproses (Petugas Diterjunkan)</option>
+            <option value="Selesai">✅ Selesai (Masalah Teratasi)</option>
+            <option value="Ditolak">❌ Ditolak (Laporan Tidak Valid)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-300 uppercase tracking-wider mb-1">Catatan Tindak Lanjut Petugas</label>
+          <textarea id="admin-modal-catatan" rows="3" placeholder="Masukkan instruksi atau perkembangan penanganan oleh petugas..." class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-xs text-slate-100"></textarea>
+        </div>
+
+        <button id="btn-save-admin-action" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-xs rounded-xl transition shadow">
+          Simpan Pembaruan Status
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Main Controller -->
+  <script type="module" src="/src/js/app.js"></script>
+</body>
+</html>
