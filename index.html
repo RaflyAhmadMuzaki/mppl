@@ -13,7 +13,7 @@
   <link rel="apple-touch-icon" href="/icons/icon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500;600;700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -22,6 +22,10 @@
       darkMode: 'class',
       theme: {
         extend: {
+          fontFamily: {
+            sans: ['Inter', 'Source Sans 3', 'sans-serif'],
+            heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
           colors: {
             brand: {
               50: '#ecfdf5',
@@ -88,8 +92,11 @@
           <button id="btn-close-gate-front" type="button" aria-label="Tutup dialog login" class="btn-close-gate">✕</button>
 
           <div class="text-center">
-            <div class="w-14 h-14 bg-gradient-to-br from-emerald-400 to-teal-600 rounded-2xl mx-auto flex items-center justify-center text-slate-950 font-black text-2xl shadow-lg border border-emerald-300/40 mb-3">
-              S
+            <div class="w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-700 rounded-2xl mx-auto flex items-center justify-center text-white shadow-lg border border-emerald-300/40 mb-3" aria-hidden="true">
+              <svg class="w-8 h-8 text-emerald-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+                <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+              </svg>
             </div>
             <h2 class="text-2xl font-black text-white tracking-tight">SIMPEL</h2>
             <p class="text-xs text-slate-400 mt-1">Sistem Informasi Pelaporan Lingkungan Kota</p>
@@ -275,8 +282,11 @@
         
         <!-- Logo & Brand -->
         <a href="#" class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 flex items-center justify-center text-slate-950 font-black text-xl shadow-lg border border-emerald-300/30">
-            S
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center text-white shadow-lg border border-emerald-400/30 transition transform hover:scale-105" aria-hidden="true">
+            <svg class="w-6 h-6 text-emerald-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+              <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+            </svg>
           </div>
           <div>
             <span class="font-extrabold text-base sm:text-lg tracking-tight text-white flex items-center gap-1.5">
@@ -288,7 +298,7 @@
 
         <!-- Center Nav Links -->
         <nav id="main-navigation" class="gov-main-nav flex items-center gap-6 text-xs font-semibold text-slate-300" aria-label="Navigasi utama">
-          <a href="#tentang-simpel" class="hover:text-emerald-400 transition">Tentang SIMPEL</a>
+          <a data-nav-role="masyarakat" href="#tentang-simpel" class="hover:text-emerald-400 transition">Tentang SIMPEL</a>
           <a data-nav-role="masyarakat" href="#section-user-form" class="hover:text-emerald-400 transition">Buat Laporan</a>
           <a data-nav-role="admin" href="#section-admin-panel" class="hidden hover:text-emerald-400 transition">Kelola Aduan</a>
           <a data-nav-role="masyarakat" href="#status-laporan" class="hover:text-emerald-400 transition">Status Aduan</a>
@@ -421,245 +431,380 @@
       </section>
 
       <!-- SECTION: Tentang SIMPEL (Pengertian, Tujuan, Fitur, dan Alur) -->
-      <section id="tentang-simpel" class="scroll-mt-24 space-y-8">
-        <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+      <section id="tentang-simpel" class="scroll-mt-24 space-y-10">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-800 pb-4 gap-2">
           <div>
-            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-              Tentang SIMPEL
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight flex items-center gap-2">
+              <span>🌿</span> Tentang SIMPEL
             </h2>
-            <p class="text-xs text-slate-400">Pengertian, tujuan, fitur unggulan, dan alur pelaporan lingkungan kota.</p>
+            <p class="text-xs sm:text-sm text-slate-400 mt-1">Sistem Informasi Pelaporan Lingkungan Kota berbasis Geospasial & Partisipasi Publik Cerdas.</p>
           </div>
-          <span class="px-3 py-1 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-full">PROFIL & EDUKASI</span>
+          <span class="self-start sm:self-auto px-3.5 py-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold rounded-full">PROFIL & PANDUAN LENGKAP</span>
         </div>
 
-        <!-- Main Introduction Card (Pengertian) -->
-        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl relative overflow-hidden">
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div class="lg:col-span-8 space-y-4">
-              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-[11px] font-bold text-emerald-400 uppercase tracking-wider">
-                🌱 Transformasi Digital Pelayanan Lingkungan Hidup
+        <!-- 1. Main Introduction Card (Pengertian & Latar Belakang) -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            <div class="lg:col-span-8 space-y-5">
+              <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-xs font-bold text-emerald-400 uppercase tracking-wider">
+                🌱 Transformasi Digital Pengawasan & Tata Kelola Lingkungan Perkotaan
               </div>
-              <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">
-                Apa Itu <span class="text-emerald-400">SIMPEL</span>?
+              
+              <h3 class="text-2xl sm:text-3xl font-black text-white tracking-tight leading-snug">
+                Mengenal <span class="text-emerald-400">SIMPEL</span>: Jembatan Aspirasi Warga & Aksi Cepat Kota
               </h3>
+              
               <p class="text-xs sm:text-sm text-slate-300 leading-relaxed text-justify">
-                <b>SIMPEL (Sistem Informasi Pelaporan Lingkungan Kota)</b> adalah platform layanan publik digital berbasis web dan geospasial yang dirancang untuk menjembatani partisipasi aktif masyarakat perkotaan dengan Dinas Lingkungan Hidup (DLH) serta instansi penanganan fasilitas kota.
+                <b>SIMPEL (Sistem Informasi Pelaporan Lingkungan Kota)</b> adalah platform terpadu berbasis web modern dan sistem informasi geografis (GIS) yang dikembangkan khusus untuk memfasilitasi pelaporan, penanganan, dan pemantauan permasalahan lingkungan hidup serta fasilitas publik di wilayah perkotaan secara terbuka, transparan, dan real-time.
               </p>
+              
               <p class="text-xs sm:text-sm text-slate-300 leading-relaxed text-justify">
-                Melalui SIMPEL, setiap warga dapat melaporkan permasalahan lingkungan di sekitar mereka secara cepat, presisi, dan terdokumentasi — mulai dari penumpukan sampah liar, saluran drainase tersumbat, pencemaran limbah, hingga kerusakan fasilitas umum dan pohon rawan tumbang. Dilengkapi teknologi <i>geo-tagging</i> peta interaktif dan verifikasi bukti foto, laporan langsung terpetakan dan terdistribusi ke petugas untuk segera ditindaklanjuti secara transparan.
+                Lahir dari kesadaran bahwa pertumbuhan kota yang pesat kerap diiringi oleh lonjakan volume timbunan sampah liar, penurunan fungsi saluran pembuangan air (drainase), serta kerusakan fasilitas umum yang luput dari pantauan aparat, SIMPEL memberdayakan setiap warga kota sebagai mitra aktif pemerintah. Dengan fitur <i>geo-tagging</i> berbasis satelit GPS dan unggahan dokumentasi foto autentik, warga dapat menyampaikan aduan dalam hitungan detik tanpa harus menghadapi birokrasi konvensional yang berbelit-belit.
               </p>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2 text-center text-xs">
-                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
-                  <div class="text-base font-black text-emerald-400 mb-0.5">100%</div>
-                  <div class="text-[10px] text-slate-400 font-bold uppercase">Berbasis Web & PWA</div>
+
+              <p class="text-xs sm:text-sm text-slate-300 leading-relaxed text-justify">
+                Setiap laporan yang masuk langsung dicatat dalam pangkalan data terpusat, divalidasi oleh verifikator resmi Dinas Lingkungan Hidup (DLH), dan ditugaskan kepada unit pelaksana teknis lapangan terkait. Warga pelapor maupun masyarakat umum dapat memantau setiap langkah penanganan melalui nomor tiket registrasi unik secara terbuka dari layar gawai mereka.
+              </p>
+
+              <!-- Highlight Key Metrics Badges -->
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 text-center text-xs">
+                <div class="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800">
+                  <div class="text-lg font-black text-emerald-400 mb-0.5">100% PWA</div>
+                  <div class="text-[10px] text-slate-400 font-bold uppercase">Akses Ringan & Cepat</div>
                 </div>
-                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
-                  <div class="text-base font-black text-blue-400 mb-0.5">GPS / GIS</div>
-                  <div class="text-[10px] text-slate-400 font-bold uppercase">Geo-Tagging Presisi</div>
+                <div class="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800">
+                  <div class="text-lg font-black text-blue-400 mb-0.5">GPS Presisi</div>
+                  <div class="text-[10px] text-slate-400 font-bold uppercase">Geo-Tagging Satelit</div>
                 </div>
-                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
-                  <div class="text-base font-black text-amber-400 mb-0.5">Real-Time</div>
-                  <div class="text-[10px] text-slate-400 font-bold uppercase">Tracking Terbuka</div>
+                <div class="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800">
+                  <div class="text-lg font-black text-amber-400 mb-0.5">&lt; 24 Jam</div>
+                  <div class="text-[10px] text-slate-400 font-bold uppercase">Target Verifikasi Awal</div>
                 </div>
-                <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800">
-                  <div class="text-base font-black text-purple-400 mb-0.5">OTP Cepat</div>
-                  <div class="text-[10px] text-slate-400 font-bold uppercase">Akses Aman</div>
+                <div class="p-3.5 bg-slate-950/80 rounded-2xl border border-slate-800">
+                  <div class="text-lg font-black text-purple-400 mb-0.5">OTP Instan</div>
+                  <div class="text-[10px] text-slate-400 font-bold uppercase">Keamanan Tanpa Password</div>
                 </div>
               </div>
             </div>
 
-            <div class="lg:col-span-4 flex flex-col gap-3">
-              <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 space-y-2">
-                <div class="text-emerald-400 text-xl font-black">🎯 Visi</div>
-                <p class="text-xs text-slate-300 leading-relaxed">
-                  Mewujudkan tata kelola lingkungan perkotaan yang bersih, sehat, berkelanjutan, dan tanggap darurat melalui integrasi teknologi informasi dan kolaborasi warga.
+            <!-- Side Card: Visi, Misi & Landasan Kebijakan -->
+            <div class="lg:col-span-4 flex flex-col gap-4">
+              <div class="bg-slate-950/85 border border-slate-800 rounded-2xl p-5 space-y-2.5">
+                <div class="flex items-center gap-2 text-emerald-400 font-bold text-sm">
+                  <span>🎯</span>
+                  <span class="text-base font-black">Visi Utama</span>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Mewujudkan kawasan perkotaan yang bersih, tangguh bencana lingkungan, tertata asri, serta ramah huni melalui perpaduan inovasi teknologi geospasial dan kolaborasi gotong royong seluruh lapisan masyarakat.
                 </p>
               </div>
-              <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 space-y-2">
-                <div class="text-blue-400 text-xl font-black">🏛️ Sinergi DLH Kota</div>
-                <p class="text-xs text-slate-300 leading-relaxed">
-                  Menghubungkan masyarakat secara langsung dengan petugas dinas terkait demi memangkas alur birokrasi penanganan aduan lingkungan perkotaan.
+
+              <div class="bg-slate-950/85 border border-slate-800 rounded-2xl p-5 space-y-2.5">
+                <div class="flex items-center gap-2 text-blue-400 font-bold text-sm">
+                  <span>🏛️</span>
+                  <span class="text-base font-black">Kemitraan Dinas Terpadu</span>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Sistem ini terkoneksi dengan unit kerja penanganan kota, meliputi Dinas Lingkungan Hidup (DLH), Dinas Sumber Daya Air & Bina Marga, Satuan Polisi Pamong Praja (Satpol PP), serta petugas kebersihan tingkat kecamatan dan kelurahan.
+                </p>
+              </div>
+
+              <div class="bg-slate-950/85 border border-slate-800 rounded-2xl p-5 space-y-2.5">
+                <div class="flex items-center gap-2 text-amber-400 font-bold text-sm">
+                  <span>⚖️</span>
+                  <span class="text-base font-black">Landasan Hukum & Regulasi</span>
+                </div>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Berpijak pada amanat UU No. 32 Tahun 2009 tentang Perlindungan dan Pengelolaan Lingkungan Hidup serta regulasi Peraturan Daerah tentang pengelolaan persampahan dan hak partisipasi warga dalam pengawasan publik.
                 </p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Tujuan Utama (4 Pilar) -->
-        <div>
-          <h3 class="text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <span>🎯</span> Tujuan Utama Pengembangan SIMPEL
-          </h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- 2. Tujuan Utama Pengembangan SIMPEL (4 Pilar Mendalam) -->
+        <div class="space-y-4">
+          <div class="border-b border-slate-800/80 pb-2">
+            <h3 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2.5">
+              <span>🎯</span> 4 Pilar Tujuan Strategis SIMPEL
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Tujuan jangka pendek dan jangka panjang penerapan sistem informasi pelaporan kota.</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between hover:border-emerald-500/50 transition">
-              <div class="space-y-2.5">
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-xl font-bold border border-emerald-500/20">
+            <!-- Pilar 1 -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between hover:border-emerald-500/50 transition">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-2xl font-bold border border-emerald-500/20">
                   ⚡
                 </div>
-                <h4 class="text-sm font-bold text-white">1. Respons Cepat & Tanggap</h4>
-                <p class="text-xs text-slate-300 leading-relaxed">
-                  Memangkas jalur pengaduan konvensional agar laporan masyarakat segera diteruskan kepada petugas lapangan dalam waktu singkat.
+                <h4 class="text-sm sm:text-base font-extrabold text-white">1. Respons Cepat & Terukur</h4>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Memangkas rantai birokrasi surat-menyurat manual. Laporan dari warga langsung didisposisikan kepada regu reaksi cepat (tim oranye/kebersihan) lapangan sehingga penanganan masalah lingkungan dapat dimulai dalam hitungan jam.
                 </p>
+                <div class="text-[11px] text-slate-400 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
+                  ⏱️ <b>Target:</b> Verifikasi &lt; 24 jam kerja dan tindakan fisik terukur.
+                </div>
               </div>
-              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-semibold text-emerald-400">
-                Pangkas Birokrasi → Aksi Nyata
+              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-bold text-emerald-400 flex items-center gap-1">
+                <span>✓</span> Pangkas Birokrasi → Aksi Nyata
               </div>
             </div>
 
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between hover:border-blue-500/50 transition">
-              <div class="space-y-2.5">
-                <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-xl font-bold border border-blue-500/20">
+            <!-- Pilar 2 -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between hover:border-blue-500/50 transition">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-400 flex items-center justify-center text-2xl font-bold border border-blue-500/20">
                   🔍
                 </div>
-                <h4 class="text-sm font-bold text-white">2. Transparansi & Akuntabilitas</h4>
-                <p class="text-xs text-slate-300 leading-relaxed">
-                  Memberikan keterbukaan penanganan dengan nomor tiket unik, histori penanganan, dan catatan langsung dari petugas dinas.
+                <h4 class="text-sm sm:text-base font-extrabold text-white">2. Transparansi & Akuntabilitas</h4>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Menjamin keterbukaan penanganan aduan tanpa ada laporan yang diabaikan. Setiap tiket pengaduan memiliki rekaman kronologis, nama petugas verifikator, catatan tindak lanjut, dan dokumentasi hasil penanganan yang dapat diaudit publik.
                 </p>
+                <div class="text-[11px] text-slate-400 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
+                  📋 <b>Fitur:</b> Nomor tiket unik dan timeline progres 3 status.
+                </div>
               </div>
-              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-semibold text-blue-400">
-                Tracking 3 Tahap Terbuka
+              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-bold text-blue-400 flex items-center gap-1">
+                <span>✓</span> Pengawasan Terbuka & Bebas Calo
               </div>
             </div>
 
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between hover:border-amber-500/50 transition">
-              <div class="space-y-2.5">
-                <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-xl font-bold border border-amber-500/20">
+            <!-- Pilar 3 -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between hover:border-amber-500/50 transition">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-400 flex items-center justify-center text-2xl font-bold border border-amber-500/20">
                   🗺️
                 </div>
-                <h4 class="text-sm font-bold text-white">3. Pemetaan Titik Rawan</h4>
-                <p class="text-xs text-slate-300 leading-relaxed">
-                  Mengidentifikasi sebaran geografis titik timbulan sampah liar dan fasilitas rusak sebagai bahan analisis kebijakan kota (*data-driven*).
+                <h4 class="text-sm sm:text-base font-extrabold text-white">3. Pemetaan Titik Rawan Geospasial</h4>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Mengubah aduan individual menjadi basis data spasial perkotaan (*spatial big data*). Titik koordinat aduan diolah menjadi peta kepadatan (*heatmap*) untuk mengidentifikasi simpul tumpukan sampah liar, saluran drainase mampet, dan titik rawan genangan banjir.
                 </p>
+                <div class="text-[11px] text-slate-400 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
+                  📊 <b>Manfaat:</b> Dasar kebijakan penempatan TPS 3R & rute truk.
+                </div>
               </div>
-              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-semibold text-amber-400">
-                Data Spasial Berbasis Peta
+              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-bold text-amber-400 flex items-center gap-1">
+                <span>✓</span> Pengambilan Kebijakan Berbasis Data
               </div>
             </div>
 
-            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-lg flex flex-col justify-between hover:border-purple-500/50 transition">
-              <div class="space-y-2.5">
-                <div class="w-10 h-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl font-bold border border-purple-500/20">
+            <!-- Pilar 4 -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between hover:border-purple-500/50 transition">
+              <div class="space-y-3">
+                <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-2xl font-bold border border-purple-500/20">
                   🤝
                 </div>
-                <h4 class="text-sm font-bold text-white">4. Partisipasi Aktif Warga</h4>
-                <p class="text-xs text-slate-300 leading-relaxed">
-                  Membangun kesadaran kolektif warga kota untuk ikut menjaga kebersihan dan ketertiban lingkungan sekitar secara berkesinambungan.
+                <h4 class="text-sm sm:text-base font-extrabold text-white">4. Partisipasi Aktif & Gotong Royong</h4>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Menghidupkan kembali semangat gotong royong warga melalui kanal digital. Memberikan ruang yang aman dan mudah bagi warga untuk menyuarakan aspirasi demi mewujudkan lingkungan tempat tinggal yang bersih, asri, sehat, dan berkelanjutan.
                 </p>
+                <div class="text-[11px] text-slate-400 bg-slate-950/60 p-2.5 rounded-xl border border-slate-800">
+                  🌱 <b>Visi:</b> Ekosistem Smart & Green City berpusat pada warga.
+                </div>
               </div>
-              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-semibold text-purple-400">
-                Budaya Gotong Royong Digital
+              <div class="mt-4 pt-3 border-t border-slate-800/80 text-[11px] font-bold text-purple-400 flex items-center gap-1">
+                <span>✓</span> Kolaborasi Warga & Pemerintah Kota
               </div>
             </div>
 
           </div>
         </div>
 
-        <!-- Alur Pelaporan (4 Langkah) -->
-        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl">
-          <div class="mb-6">
-            <h3 class="text-lg font-bold text-white flex items-center gap-2">
-              <span>📋</span> Alur Pelaporan Sederhana di SIMPEL
+        <!-- 3. Alur Pelaporan Sederhana & Terstruktur (4 Langkah Mudah) -->
+        <div class="bg-slate-900/80 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl space-y-6">
+          <div class="border-b border-slate-800 pb-3">
+            <h3 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2.5">
+              <span>📋</span> Alur Pelaporan Sederhana di SIMPEL (Dari Lapor Hingga Tuntas)
             </h3>
-            <p class="text-xs text-slate-400">Hanya 4 langkah mudah untuk melaporkan permasalahan lingkungan hingga tuntas.</p>
+            <p class="text-xs sm:text-sm text-slate-400 mt-1">Hanya 4 langkah terstruktur untuk menyampaikan aduan masalah lingkungan sampai tuntas ditangani petugas lapangan.</p>
           </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             
-            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative">
-              <div class="space-y-2">
+            <!-- Tahap 1 -->
+            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+              <div class="space-y-2.5">
                 <div class="flex items-center justify-between">
-                  <span class="w-7 h-7 rounded-lg bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">1</span>
-                  <span class="text-lg">📷</span>
+                  <span class="w-8 h-8 rounded-xl bg-emerald-500 text-slate-950 font-black text-sm flex items-center justify-center">1</span>
+                  <span class="text-2xl">📷</span>
                 </div>
-                <h4 class="text-xs font-bold text-white">Foto Masalah</h4>
-                <p class="text-[11px] text-slate-400 leading-relaxed">
-                  Temukan tumpukan sampah, jalan rusak, atau saluran mampet dan ambil foto bukti dengan jelas.
+                <h4 class="text-sm font-bold text-white">Ambil Foto & Catat Masalah</h4>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Temukan permasalahan lingkungan di sekitar Anda (sampah liar, jalan rusak, saluran mampet). Ambil foto bukti dengan kamera ponsel Anda secara jelas dan siapkan deskripsi kronologi singkat mengenai kondisi di lapangan.
                 </p>
               </div>
-              <div class="text-[10px] text-emerald-400 font-mono mt-3">Langkah Awal</div>
+              <div class="pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-400">
+                Langkah 01 • Dokumentasi Nyata
+              </div>
             </div>
 
-            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative">
-              <div class="space-y-2">
+            <!-- Tahap 2 -->
+            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+              <div class="space-y-2.5">
                 <div class="flex items-center justify-between">
-                  <span class="w-7 h-7 rounded-lg bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">2</span>
-                  <span class="text-lg">📍</span>
+                  <span class="w-8 h-8 rounded-xl bg-emerald-500 text-slate-950 font-black text-sm flex items-center justify-center">2</span>
+                  <span class="text-2xl">📍</span>
                 </div>
-                <h4 class="text-xs font-bold text-white">Tandai di Peta</h4>
-                <p class="text-[11px] text-slate-400 leading-relaxed">
-                  Gunakan tombol "Lokasi Saya" atau klik langsung di peta interaktif untuk menentukan koordinat presisi.
+                <h4 class="text-sm font-bold text-white">Tandai Lokasi Presisi di Peta</h4>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Buka formulir pengaduan, klik tombol <b>"Lokasi Saya"</b> untuk mengambil koordinat GPS perangkat otomatis, atau cari nama jalan dan geser pin pada peta interaktif Leaflet untuk menandai titik permasalahan secara akurat.
                 </p>
               </div>
-              <div class="text-[10px] text-emerald-400 font-mono mt-3">Geo-Tagging GPS</div>
+              <div class="pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-400">
+                Langkah 02 • Geo-Tagging Satelit
+              </div>
             </div>
 
-            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative">
-              <div class="space-y-2">
+            <!-- Tahap 3 -->
+            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+              <div class="space-y-2.5">
                 <div class="flex items-center justify-between">
-                  <span class="w-7 h-7 rounded-lg bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">3</span>
-                  <span class="text-lg">🛡️</span>
+                  <span class="w-8 h-8 rounded-xl bg-emerald-500 text-slate-950 font-black text-sm flex items-center justify-center">3</span>
+                  <span class="text-2xl">🛡️</span>
                 </div>
-                <h4 class="text-xs font-bold text-white">Verifikasi Petugas</h4>
-                <p class="text-[11px] text-slate-400 leading-relaxed">
-                  Petugas Dinas Lingkungan Hidup meninjau laporan, memberikan catatan, dan menerjunkan tim penanganan.
+                <h4 class="text-sm font-bold text-white">Verifikasi Petugas Dinas</h4>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Laporan masuk ke portal petugas dinas. Verifikator memeriksa keabsahan aduan, memberikan catatan tindak lanjut, dan mendisposisikan tugas kepada tim lapangan (UPT Kebersihan / Pertamanan / Bina Marga) yang berwenang.
                 </p>
               </div>
-              <div class="text-[10px] text-emerald-400 font-mono mt-3">Validasi DLH Kota</div>
+              <div class="pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-400">
+                Langkah 03 • Validasi Tim Teknis
+              </div>
             </div>
 
-            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative">
-              <div class="space-y-2">
+            <!-- Tahap 4 -->
+            <div class="bg-slate-950/80 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between space-y-4">
+              <div class="space-y-2.5">
                 <div class="flex items-center justify-between">
-                  <span class="w-7 h-7 rounded-lg bg-emerald-500 text-slate-950 font-black text-xs flex items-center justify-center">4</span>
-                  <span class="text-lg">✅</span>
+                  <span class="w-8 h-8 rounded-xl bg-emerald-500 text-slate-950 font-black text-sm flex items-center justify-center">4</span>
+                  <span class="text-2xl">✅</span>
                 </div>
-                <h4 class="text-xs font-bold text-white">Penanganan Tuntas</h4>
-                <p class="text-[11px] text-slate-400 leading-relaxed">
-                  Masalah lingkungan diselesaikan dan status laporan otomatis terbarui menjadi "Selesai" di sistem.
+                <h4 class="text-sm font-bold text-white">Eksekusi Tuntas & Pemantauan</h4>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Tim teknis diterjunkan untuk membersihkan sampah atau memperbaiki fasilitas. Status laporan diperbarui menjadi <b>"Selesai"</b> lengkap dengan catatan resmi petugas yang dapat dipantau langsung di sistem pelacakan.
                 </p>
               </div>
-              <div class="text-[10px] text-emerald-400 font-mono mt-3">Pantau Real-Time</div>
+              <div class="pt-3 border-t border-slate-800 text-[11px] font-mono text-emerald-400">
+                Langkah 04 • Laporan Selesai
+              </div>
             </div>
 
           </div>
         </div>
 
-        <!-- Kategori Masalah Yang Dilayani -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3">
-            <span class="text-2xl">🗑️</span>
-            <div>
-              <div class="text-xs font-bold text-white">Sampah Liar</div>
-              <div class="text-[10px] text-slate-400">TPA ilegal & limbah warga</div>
-            </div>
+        <!-- 4. Kategori Masalah Yang Dilayani (Detail Kasus) -->
+        <div class="space-y-4">
+          <div class="border-b border-slate-800/80 pb-2">
+            <h3 class="text-xl sm:text-2xl font-black text-white flex items-center gap-2.5">
+              <span>🗂️</span> Kategori Masalah Lingkungan yang Dapat Dilaporkan
+            </h3>
+            <p class="text-xs sm:text-sm text-slate-400 mt-0.5">Pilih kategori yang tepat saat mengisi form aduan agar penanganan dapat didisposisikan secara cepat ke dinas terkait.</p>
           </div>
-          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3">
-            <span class="text-2xl">💧</span>
-            <div>
-              <div class="text-xs font-bold text-white">Air & Drainase</div>
-              <div class="text-[10px] text-slate-400">Selokan mampet & genangan</div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex gap-4 items-start shadow-lg hover:border-emerald-500/40 transition">
+              <span class="text-3xl p-2.5 bg-slate-950 rounded-xl border border-slate-800">🗑️</span>
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">Sampah Liar & TPS Ilegal</div>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Tumpukan sampah berserakan di bahu jalan, TPS liar di lahan kosong tanpa izin, tempat sampah umum yang meluap dan tidak terangkut, serta timbunan sampah rumah tangga maupun pasar.
+                </p>
+                <div class="text-[11px] text-emerald-400 font-semibold pt-1">Dinas Terkait: UPT Kebersihan DLH</div>
+              </div>
             </div>
-          </div>
-          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3">
-            <span class="text-2xl">🛣️</span>
-            <div>
-              <div class="text-xs font-bold text-white">Jalan & Fasilitas</div>
-              <div class="text-[10px] text-slate-400">Trotoar, lampu & halte</div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex gap-4 items-start shadow-lg hover:border-blue-500/40 transition">
+              <span class="text-3xl p-2.5 bg-slate-950 rounded-xl border border-slate-800">💧</span>
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">Air & Drainase Tersumbat</div>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Saluran drainase mampet akibat sampah atau sedimentasi lumpur tebal, genangan air berulang saat hujan deras, gorong-gorong yang ambrol, serta luapan air selokan ke badan jalan perkotaan.
+                </p>
+                <div class="text-[11px] text-blue-400 font-semibold pt-1">Dinas Terkait: Dinas Sumber Daya Air & Drainase</div>
+              </div>
             </div>
-          </div>
-          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3">
-            <span class="text-2xl">🌳</span>
-            <div>
-              <div class="text-xs font-bold text-white">Ruang Terbuka Hijau</div>
-              <div class="text-[10px] text-slate-400">Taman & pohon rawan tumbang</div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex gap-4 items-start shadow-lg hover:border-amber-500/40 transition">
+              <span class="text-3xl p-2.5 bg-slate-950 rounded-xl border border-slate-800">🛣️</span>
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">Jalan & Fasilitas Umum</div>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Trotoar pejalan kaki yang amblas atau berlubang parah, penutup bak kontrol drainase hilang yang membahayakan warga, lampu penerangan jalan umum (PJU) padam total, serta fasilitas halte rusak.
+                </p>
+                <div class="text-[11px] text-amber-400 font-semibold pt-1">Dinas Terkait: Dinas Bina Marga & Perhubungan</div>
+              </div>
             </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex gap-4 items-start shadow-lg hover:border-emerald-500/40 transition">
+              <span class="text-3xl p-2.5 bg-slate-950 rounded-xl border border-slate-800">🌳</span>
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">Ruang Terbuka Hijau (RTH)</div>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Dahan pohon rimbun menutupi rambu jalan atau kabel listrik, pohon keropos yang rawan tumbang saat cuaca buruk, taman kota yang terbengkalai, serta kerusakan fasilitas vegetasi publik.
+                </p>
+                <div class="text-[11px] text-emerald-400 font-semibold pt-1">Dinas Terkait: Bidang Pertamanan & Pemakaman DLH</div>
+              </div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex gap-4 items-start shadow-lg hover:border-rose-500/40 transition">
+              <span class="text-3xl p-2.5 bg-slate-950 rounded-xl border border-slate-800">⚠️</span>
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">Pencemaran Lingkungan & Polusi</div>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Pembuangan limbah cair industri tanpa pengolahan ke sungai, pembakaran sampah terbuka dengan asap tebal beracun, bau menyengat dari pembuangan ilegal, serta pencemaran air bersih warga.
+                </p>
+                <div class="text-[11px] text-rose-400 font-semibold pt-1">Dinas Terkait: Bidang Penegakan Hukum & Pengendalian DLH</div>
+              </div>
+            </div>
+
+            <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 flex gap-4 items-start shadow-lg hover:border-purple-500/40 transition">
+              <span class="text-3xl p-2.5 bg-slate-950 rounded-xl border border-slate-800">ℹ️</span>
+              <div class="space-y-1">
+                <div class="text-sm font-bold text-white">Permasalahan Lingkungan Lainnya</div>
+                <p class="text-xs text-slate-300 leading-relaxed text-justify">
+                  Masalah lingkungan kota lainnya yang belum tercakup pada kategori di atas namun memerlukan intervensi mendesak dari aparat kota demi ketertiban, kenyamanan, dan kebersihan bersama.
+                </p>
+                <div class="text-[11px] text-purple-400 font-semibold pt-1">Dinas Terkait: Koordinasi Multi-Sektor Kota</div>
+              </div>
+            </div>
+
           </div>
-          <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 flex items-center gap-3">
-            <span class="text-2xl">⚠️</span>
-            <div>
-              <div class="text-xs font-bold text-white">Pencemaran Lingkungan</div>
-              <div class="text-[10px] text-slate-400">Limbah industri & polusi</div>
+        </div>
+
+        <!-- 5. Standar Layanan Minimal & Etika Pelaporan Warga -->
+        <div class="bg-slate-950/70 border border-slate-800 rounded-3xl p-6 sm:p-8 space-y-4">
+          <div class="flex items-center gap-2.5 text-white font-extrabold text-base sm:text-lg">
+            <span>🛡️</span> Ketentuan Pelaporan & Standar Layanan Minimal (SLA)
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300">
+            <div class="p-4 bg-slate-900/70 rounded-xl border border-slate-800/80 space-y-1.5">
+              <div class="font-bold text-emerald-400 flex items-center gap-1.5">
+                <span>⏱️</span> Verifikasi Cepat & Akurat
+              </div>
+              <p class="leading-relaxed text-justify">
+                Seluruh laporan yang masuk akan diverifikasi oleh petugas admin dinas maksimal dalam waktu 1x24 jam pada hari kerja untuk memastikan keabsahan data dan lokasi sebelum tim lapangan diberangkatkan.
+              </p>
+            </div>
+
+            <div class="p-4 bg-slate-900/70 rounded-xl border border-slate-800/80 space-y-1.5">
+              <div class="font-bold text-amber-400 flex items-center gap-1.5">
+                <span>📷</span> Kejujuran & Keaslian Bukti
+              </div>
+              <p class="leading-relaxed text-justify">
+                Pelapor wajib menyertakan foto asli kondisi terkini di lapangan dan menandai lokasi yang sesuai. Laporan fiktif atau spam dapat mengakibatkan pemblokiran akun demi efisiensi pengerahan armada penanganan.
+              </p>
+            </div>
+
+            <div class="p-4 bg-slate-900/70 rounded-xl border border-slate-800/80 space-y-1.5">
+              <div class="font-bold text-blue-400 flex items-center gap-1.5">
+                <span>🔒</span> Perlindungan Privasi Pelapor
+              </div>
+              <p class="leading-relaxed text-justify">
+                Data kontak dan email pelapor dilindungi secara ketat sesuai regulasi perlindungan data pribadi dan hanya dipergunakan oleh petugas untuk konfirmasi teknis penanganan bila diperlukan.
+              </p>
             </div>
           </div>
         </div>

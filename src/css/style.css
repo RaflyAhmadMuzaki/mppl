@@ -10,10 +10,44 @@
 }
 
 body {
-  font-family: 'Source Sans 3', sans-serif;
+  font-family: 'Inter', 'Source Sans 3', sans-serif;
+  font-weight: 400;
   background-color: var(--bg-primary);
   color: var(--ink);
   overflow-x: hidden;
+}
+
+/* Headings (Judul Utama) - Plus Jakarta Sans (Semi-Bold / Bold) */
+h1, h2, h3, h4, h5, h6,
+.font-black, .font-extrabold, .font-bold,
+#hero-title-public, #hero-title-admin {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+h1 {
+  font-weight: 800;
+}
+
+h2 {
+  font-weight: 700;
+}
+
+h3, h4 {
+  font-weight: 600;
+}
+
+/* Subjudul & Navigation - Plus Jakarta Sans (Medium) */
+.subjudul,
+.gov-hero-kicker,
+#main-navigation a,
+.text-subtitle {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 500;
+}
+
+/* Body & Paragraphs - Inter / Source Sans 3 (Regular) */
+p, span, li, label, input, textarea, select {
+  font-family: 'Inter', 'Source Sans 3', sans-serif;
 }
 
 /* Custom Scrollbar */
@@ -87,9 +121,12 @@ body {
 #main-app-wrapper > header a[href="#"] > div:first-child {
   border-radius: 0.75rem;
   border: 0;
-  background: #155d3b;
+  background: linear-gradient(135deg, #15803d, #0f766e) !important;
   color: white;
-  box-shadow: none;
+  box-shadow: 0 4px 14px rgba(21, 128, 61, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #main-app-wrapper > header a[href="#"] p {
@@ -538,11 +575,12 @@ body {
 }
 
 #auth-gate-screen {
-  font-family: 'Source Sans 3', sans-serif;
+  font-family: 'Inter', 'Source Sans 3', sans-serif;
 }
 
 #auth-gate-screen h2 {
-  font-family: 'Lora', Georgia, serif;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
 }
 
 #auth-gate-screen button {

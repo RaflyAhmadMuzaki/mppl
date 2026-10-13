@@ -469,6 +469,11 @@ function updateRoleViews(role) {
   }
   if (inboxButton) inboxButton.classList.toggle('hidden', role === 'admin');
   
+  const tentangSection = document.getElementById('tentang-simpel');
+  if (tentangSection) {
+    tentangSection.classList.toggle('hidden', role === 'admin');
+  }
+  
   if (role === 'admin') {
     if (adminSection) adminSection.classList.remove('hidden');
     if (userFormSection) userFormSection.classList.add('hidden');
