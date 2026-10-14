@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 4. Setup Form & Event Handlers
   setupFormHandlers();
   setupInboxModalHandlers();
+  setupScrollAwareHeader();
 });
 
 export function openAuthGate(mode = 'masyarakat', reason = '') {
@@ -481,6 +482,54 @@ function updateRoleViews(role) {
     if (adminSection) adminSection.classList.add('hidden');
     if (userFormSection) userFormSection.classList.remove('hidden');
   }
+}
+
+function setupScrollAwareHeader() {
+  const header = document.querySelector('#main-app-wrapper > header');
+  const navigation = document.getElementById('main-navigation');
+  if (!header || !navigation) return;
+
+  let previousScrollY = window.scrollY;
+  let scrollDirection = 0;
+  let directionalScroll = 0;
+  let animationFramePending = false;
+
+  window.addEventListener('scroll', () => {
+    if (animationFramePending) return;
+    animationFramePending = true;
+
+    window.requestAnimationFrame(() => {
+      const currentScrollY = window.scrollY;
+      const scrollDelta = currentScrollY - previousScrollY;
+      previousScrollY = currentScrollY;
+
+      if (currentScrollY <= header.offsetHeight || navigation.classList.contains('is-open')) {
+        header.classList.remove('is-scroll-hidden');
+        directionalScroll = 0;
+        scrollDirection = 0;
+      } else {
+        const nextDirection = Math.sign(scrollDelta);
+        if (nextDirection && nextDirection !== scrollDirection) {
+          scrollDirection = nextDirection;
+          directionalScroll = 0;
+        }
+
+        directionalScroll += Math.abs(scrollDelta);
+        const hideThreshold = 28;
+        const revealThreshold = 18;
+
+        if (scrollDirection > 0 && directionalScroll >= hideThreshold) {
+          header.classList.add('is-scroll-hidden');
+          directionalScroll = 0;
+        } else if (scrollDirection < 0 && directionalScroll >= revealThreshold) {
+          header.classList.remove('is-scroll-hidden');
+          directionalScroll = 0;
+        }
+      }
+
+      animationFramePending = false;
+    });
+  }, { passive: true });
 }
 
 // Setup Form Submission & Geo Picker

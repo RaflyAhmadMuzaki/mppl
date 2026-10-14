@@ -57,14 +57,14 @@ export function renderCharts(reports) {
         datasets: [{
           data: Object.values(categoryCounts),
           backgroundColor: [
-            '#10b981', // Sampah (Emerald)
-            '#3b82f6', // Jalan & Fasilitas (Blue)
-            '#06b6d4', // Air & Drainase (Cyan)
-            '#8b5cf6', // Ruang Terbuka (Purple)
+            '#15803d', // Sampah (Emerald)
+            '#0369a1', // Jalan & Fasilitas (Sky)
+            '#0e7490', // Air & Drainase (Cyan)
+            '#7c3aed', // Ruang Terbuka (Purple)
             '#64748b'  // Lainnya (Slate)
           ],
           borderWidth: 2,
-          borderColor: '#0f172a'
+          borderColor: '#ffffff'
         }]
       },
       options: {
@@ -74,8 +74,8 @@ export function renderCharts(reports) {
           legend: {
             position: 'bottom',
             labels: {
-              color: '#94a3b8',
-              font: { family: 'Source Sans 3, sans-serif', size: 11 }
+              color: '#475569',
+              font: { family: 'Inter, system-ui, sans-serif', size: 11 }
             }
           }
         },
@@ -102,10 +102,10 @@ export function renderCharts(reports) {
             statusCounts['Ditolak']
           ],
           backgroundColor: [
-            '#f59e0b', // Amber
-            '#3b82f6', // Blue
-            '#10b981', // Green
-            '#ef4444'  // Red
+            '#d97706', // Amber
+            '#0369a1', // Sky
+            '#15803d', // Green
+            '#b91c1c'  // Red
           ],
           borderRadius: 8
         }]
@@ -118,12 +118,12 @@ export function renderCharts(reports) {
         },
         scales: {
           x: {
-            ticks: { color: '#94a3b8', font: { family: 'Source Sans 3, sans-serif' } },
+            ticks: { color: '#64748b', font: { family: 'Inter, system-ui, sans-serif' } },
             grid: { display: false }
           },
           y: {
-            ticks: { color: '#94a3b8', stepSize: 1 },
-            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+            ticks: { color: '#64748b', stepSize: 1 },
+            grid: { color: '#e2e8f0' },
             beginAtZero: true
           }
         }
@@ -142,7 +142,7 @@ export function renderCharts(reports) {
         datasets: [{
           label: 'Jumlah Aduan',
           data: regions.map(([, count]) => count),
-          backgroundColor: '#06b6d4',
+          backgroundColor: '#0e7490',
           borderRadius: 8
         }]
       },
@@ -153,12 +153,12 @@ export function renderCharts(reports) {
         plugins: { legend: { display: false } },
         scales: {
           x: {
-            ticks: { color: '#94a3b8', stepSize: 1 },
-            grid: { color: 'rgba(255, 255, 255, 0.05)' },
+            ticks: { color: '#64748b', stepSize: 1 },
+            grid: { color: '#e2e8f0' },
             beginAtZero: true
           },
           y: {
-            ticks: { color: '#94a3b8', font: { family: 'Source Sans 3, sans-serif' } },
+            ticks: { color: '#64748b', font: { family: 'Inter, system-ui, sans-serif' } },
             grid: { display: false }
           }
         }

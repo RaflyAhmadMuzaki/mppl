@@ -31,7 +31,8 @@ export function openDatabase(databasePath = DATABASE_PATH) {
       emailPelapor TEXT NOT NULL,
       catatanPetugas TEXT NOT NULL DEFAULT '',
       created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      completed_at TEXT
     );
 
     CREATE TABLE IF NOT EXISTS report_status_history (
@@ -51,6 +52,16 @@ export function openDatabase(databasePath = DATABASE_PATH) {
 
     CREATE INDEX IF NOT EXISTS idx_reports_created_at ON reports(created_at DESC);
     CREATE INDEX IF NOT EXISTS idx_reports_status ON reports(status);
+  `);
+
+  const reportColumns = db.pragma('table_info(reports)');
+  if (!reportColumns.some(column => column.name === 'completed_at')) {
+    db.exec('ALTER TABLE reports ADD COLUMN completed_at TEXT');
+  }
+  db.exec(`
+    UPDATE reports
+    SET completed_at = updated_at
+    WHERE status = 'Selesai' AND completed_at IS NULL
   `);
 
   return db;

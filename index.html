@@ -7,13 +7,10 @@
   
   <!-- Manifest & Meta Tags -->
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#14532d">
+  <meta name="theme-color" content="#1e40af">
   <meta name="description" content="SIMPEL - Sistem Informasi Pelaporan Lingkungan Kota Berbasis Web dengan Geo-Tagging dan Real-Time Tracking - MPPL">
   <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
   <link rel="apple-touch-icon" href="/icons/icon.svg">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Source+Sans+3:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -23,15 +20,15 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'Source Sans 3', 'sans-serif'],
-            heading: ['"Plus Jakarta Sans"', 'sans-serif'],
+            sans: ['Inter', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+            heading: ['Inter', 'system-ui', 'sans-serif'],
           },
           colors: {
             brand: {
-              50: '#ecfdf5',
-              500: '#10b981',
-              600: '#059669',
-              900: '#064e3b',
+              50: '#eff6ff',
+              500: '#1e40af',
+              600: '#1d4ed8',
+              900: '#1e3a8a',
             }
           }
         }
@@ -369,10 +366,10 @@
             <a id="btn-hero-lapor" href="#section-user-form" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/20 transition flex items-center gap-2">
               <span aria-hidden="true">＋</span> Sampaikan Aduan
             </a>
-            <a href="#tentang-simpel" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-bold text-sm border border-slate-700 transition flex items-center gap-2">
+            <a href="#tentang-simpel" class="px-5 py-3 rounded-xl font-bold text-sm transition flex items-center gap-2">
               <span aria-hidden="true">ℹ️</span> Tentang SIMPEL
             </a>
-            <a href="#peta-laporan" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-bold text-sm border border-slate-700 transition flex items-center gap-2">
+            <a href="#peta-laporan" class="px-5 py-3 rounded-xl font-bold text-sm transition flex items-center gap-2">
               <span aria-hidden="true">⌖</span> Lihat Sebaran Laporan
             </a>
           </div>
@@ -380,7 +377,7 @@
             <a href="#section-admin-panel" class="px-5 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-extrabold text-sm shadow-lg shadow-emerald-500/20 transition flex items-center gap-2">
               <span aria-hidden="true">✓</span> Kelola Laporan
             </a>
-            <a href="#peta-laporan" class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-100 font-bold text-sm border border-slate-700 transition flex items-center gap-2">
+            <a href="#peta-laporan" class="px-5 py-3 rounded-xl font-bold text-sm transition flex items-center gap-2">
               <span aria-hidden="true">⌖</span> Lihat Sebaran Aduan
             </a>
           </div>

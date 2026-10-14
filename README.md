@@ -15,8 +15,10 @@ menjalankannya, bukan layanan online atau penyimpanan bersama antarperangkat.
 
 Laporan, foto laporan, status, serta riwayat perubahan status disimpan secara
 permanen di `data/simpel.sqlite`. File itu dibuat otomatis dan sengaja
-dikecualikan dari Git. Data tidak memiliki masa kedaluwarsa, tetapi dapat hilang
-jika file database terhapus, disk rusak, atau komputer hilang.
+dikecualikan dari Git. Aduan berstatus Selesai akan dihapus otomatis 24 jam
+setelah status tersebut ditetapkan. Data lain tidak memiliki masa kedaluwarsa,
+tetapi dapat hilang jika file database terhapus, disk rusak, atau komputer
+hilang.
 
 Untuk mencadangkan data, hentikan `npm run dev`, lalu salin
 `data/simpel.sqlite` ke media penyimpanan aman. Simpan cadangan di luar folder

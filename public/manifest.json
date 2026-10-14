@@ -4,8 +4,8 @@
   "description": "Portal Web Pelaporan Fasilitas dan Lingkungan Kota - MPPL",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f3f6f4",
-  "theme_color": "#14532d",
+  "background_color": "#f8fafc",
+  "theme_color": "#1e40af",
   "orientation": "any",
   "icons": [
     {

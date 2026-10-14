@@ -12,16 +12,28 @@ const selectReport = db.prepare('SELECT * FROM reports WHERE id = ?');
 const insertReport = db.prepare(`
   INSERT INTO reports (
     id, judul, kategori, wilayah, alamat, lat, lng, deskripsi, foto,
-    status, tanggal, pelapor, emailPelapor, catatanPetugas
+    status, tanggal, pelapor, emailPelapor, catatanPetugas, completed_at
   ) VALUES (
     @id, @judul, @kategori, @wilayah, @alamat, @lat, @lng, @deskripsi, @foto,
-    @status, @tanggal, @pelapor, @emailPelapor, @catatanPetugas
+    @status, @tanggal, @pelapor, @emailPelapor, @catatanPetugas,
+    CASE WHEN @status = 'Selesai' THEN CURRENT_TIMESTAMP ELSE NULL END
   )
 `);
 const updateReport = db.prepare(`
   UPDATE reports
-  SET status = @status, catatanPetugas = @catatanPetugas, updated_at = CURRENT_TIMESTAMP
+  SET status = @status,
+      catatanPetugas = @catatanPetugas,
+      updated_at = CURRENT_TIMESTAMP,
+      completed_at = CASE
+        WHEN @status = 'Selesai' THEN COALESCE(completed_at, CURRENT_TIMESTAMP)
+        ELSE NULL
+      END
   WHERE id = @id
+`);
+const deleteExpiredReports = db.prepare(`
+  DELETE FROM reports
+  WHERE status = 'Selesai'
+    AND completed_at <= datetime('now', '-24 hours')
 `);
 const insertHistory = db.prepare(`
   INSERT INTO report_status_history (report_id, status_sebelumnya, status_baru, catatan)
@@ -64,6 +76,7 @@ async function readJson(request) {
 }
 
 function listReports(response) {
+  deleteExpiredReports.run();
   sendJson(response, 200, { reports: selectAllReports.all().map(serializeReport) });
 }
 
@@ -179,6 +192,16 @@ const server = createServer(async (request, response) => {
     sendJson(response, statusCode, { error: statusCode >= 500 ? 'Terjadi kesalahan saat mengakses database lokal.' : error.message });
   }
 });
+
+deleteExpiredReports.run();
+const reportCleanupInterval = setInterval(() => {
+  try {
+    deleteExpiredReports.run();
+  } catch (error) {
+    console.error('[SIMPEL API] Gagal menghapus laporan selesai yang kedaluwarsa:', error);
+  }
+}, 60_000);
+reportCleanupInterval.unref();
 
 server.listen(PORT, HOST, () => {
   console.log(`[SIMPEL API] SQLite tersambung di ${HOST}:${PORT}`);
